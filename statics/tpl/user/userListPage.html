@@ -1,0 +1,42 @@
+<!-- 知识库列表分页数据 -->
+<div class="table-responsive" >
+      <table class="table table-striped b-t b-light">
+        <thead>
+          <tr style="background-color: #EAF0F7;">
+            <th class="col-lg-1">Account</th>
+            <th class="col-lg-1">Name</th>
+            <th class="col-lg-2">Email</th>
+            <th class="col-lg-1">Phone</th>
+            <th class="col-lg-1">Age</th>
+            <th class="col-lg-1">Sex</th>
+            <th class="col-lg-2">CreateTime</th>
+            <th class="col-lg-2">UpdateTime</th>
+            <th class="col-lg-1">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="user in userList">
+            <td><i class="fa fa-eye" style="cursor:pointer;" ng-click="showUser(user.id);"></i>{{user.account}}</td>
+            <td>{{user.name}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.phone}}</td>
+            <td>{{user.age}}</td>
+            <td>{{ 'userList.sex.'+user.sex | translate }}</td>
+            <td>{{user.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{user.update_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td><i class="fa fa-gear text-info rpactive iconsClass" ng-click="update(user.id);"></i>
+                <i class="fa fa-times text-danger text rpactive iconsClass" ng-click="deleteUser(user.id);"></i>
+            </td>
+          </tr>
+          <!-- 查询无数据 -->
+          <tr ng-if="!userList.length">
+               <td class="text-center" colspan="12" >无数据</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+   <div class="panel-footer">
+       <div class="text-center" ng-show="1">
+        	<pagination total-items="pager.totalRecord" items-per-page="pager.pageSize" ng-model="queryParams.currentPage" class="pagination-sm" boundary-links="true" rotate="false" max-size="6" ng-change="load()"></pagination>
+        </div>
+   </div>

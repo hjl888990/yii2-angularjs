@@ -1,0 +1,293 @@
+<div class="panel panel-default" id="createUserId" style="display:none">
+    <div class="panel-body">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="addForm">
+            <div class="panel b-a">
+                <div class="wrapper-xs bg-success no-border">          
+                </div>
+                <div class="wrapper text-center">
+                    <h2 class="text-u-c m-b-none" style="margin-top: 0px;">添加用户</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                账号
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="name" ng-trim="true" ng-minlength="6"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userCreateForm.account" required>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.account"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                用户名
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="name" ng-trim="true" ng-minlength="1"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userCreateForm.name" required>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.name"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                密码
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="password" name="password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="userCreateForm.password" required>   
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.password"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                年龄
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="age" ng-trim="true" ng-maxlength="3" class="form-control  base-search-input"  ng-model="userCreateForm.age" required>        
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.age"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                性别
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <select class="form-control"  name="sex" ng-model="userCreateForm.sex" ng-options="sex.id as sex.name for sex in sexOptions" required></select>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.sex"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                邮箱
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="email" name="email" ng-trim="true" ng-maxlength="30" class="form-control  base-search-input"  ng-model="userCreateForm.email" required>  
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.email"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                电话
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="number" name="phone" ng-trim="true" ng-maxlength="11" class="form-control  base-search-input"  ng-model="userCreateForm.phone" required>   
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.phone"></span>
+                        </label>
+                    </li>
+                </ul>
+                <div class="panel-footer text-center">
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="addForm.$invalid"  type="submit" ng-click="creatUser()" >添加</button>
+                    <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default" id="detailUserId" style="display:none">
+    <div class="panel-body">
+        <form class="form-validation form-inline ng-pristine ng-valid">
+            <div class="panel b-a">
+                <div class="wrapper-xs bg-info no-border">          
+                </div>
+                <div class="wrapper text-center">
+                    <h2 class="text-u-c m-b-none" style="margin-top: 0px;">用户详情</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                账号
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor" ng-bind="userDetail.account"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                用户名
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor" ng-bind="userDetail.name"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                年龄
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor" ng-bind="userDetail.age"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                性别
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor">{{'userList.sex.' + userDetail.sex| translate}}</span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                邮箱
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor" ng-bind="userDetail.email"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                电话
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor" ng-bind="userDetail.phone"></span>
+                        </label>
+                    </li>
+                </ul>
+                <div class="panel-footer text-center">
+                    <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >确认</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default" id="updateUserId" style="display:none">
+    <div class="panel-body">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="updateForm">
+            <div class="panel b-a">
+                <div class="wrapper-xs bg-success no-border">          
+                </div>
+                <div class="wrapper text-center">
+                    <h2 class="text-u-c m-b-none" style="margin-top: 0px;">更新用户</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                账号
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <span class="ng-binding fontColor" ng-bind="userUpdateForm.account"></span>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.account"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                用户名
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="name" ng-trim="true" ng-minlength="1"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userUpdateForm.name" required>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.name"></span>
+                        </label>
+                        <span class="ng-binding colorRed" ng-bind="createReturnMessage.name"></span>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                密码
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="password" name="password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="userUpdateForm.password" required>   
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.password"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                年龄
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="number" name="age" ng-trim="true" ng-maxlength="3" class="form-control  base-search-input"  ng-model="userUpdateForm.age" required>        
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.age"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                性别
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <select class="form-control"  name="sex" ng-model="userUpdateForm.sex" ng-options="sex.id as sex.name for sex in sexOptions" required></select>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.sex"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                邮箱
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="email" name="email" ng-trim="true" ng-maxlength="30" class="form-control  base-search-input"  ng-model="userUpdateForm.email" required>  
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.email"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                电话
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="phone" ng-trim="true" ng-maxlength="11" class="form-control  base-search-input"  ng-model="userUpdateForm.phone" required>   
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.phone"></span>
+                        </label>
+                    </li>
+                </ul>
+                <div class="panel-footer text-center">
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="updateForm.$invalid"  type="submit" ng-click="updateUser()" >更新</button>
+                    <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

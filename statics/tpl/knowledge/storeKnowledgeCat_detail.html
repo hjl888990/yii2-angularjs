@@ -1,0 +1,76 @@
+<div class="panel panel-default" id="createKnowlegdeCatId" style="display:none">
+    <div class="panel-body">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="addForm">
+            <div class="panel b-a">
+                <div class="wrapper-xs bg-success no-border">          
+                </div>
+                <div class="wrapper text-center">
+                    <h2 class="text-u-c m-b-none" style="margin-top: 0px;">添加文章分类</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                上级分类
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            {{catCreateForm.parentName}}
+                        </label>
+                    </li>
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                名称
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="title" class="form-control  base-search-input"  ng-model="catCreateForm.title" required>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.title"></span>
+                        </label>
+                    </li>
+                    
+                </ul>
+                <div class="panel-footer text-center">
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="addForm.$invalid"  type="submit" ng-click="createSubmit()" >保存</button>
+                    <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default" id="updateKnowlegdeCatId" style="display:none">
+    <div class="panel-body">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="addForm">
+            <div class="panel b-a">
+                <div class="wrapper-xs bg-success no-border">          
+                </div>
+                <div class="wrapper text-center">
+                    <h2 class="text-u-c m-b-none" style="margin-top: 0px;">编辑文章分类</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                名称
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="text" name="title" class="form-control  base-search-input"  ng-model="catUpdateForm.title" required>
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.title"></span>
+                        </label>
+                    </li>
+                    
+                </ul>
+                <div class="panel-footer text-center">
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="addForm.$invalid"  type="submit" ng-click="updateSubmit()" >保存</button>
+                    <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

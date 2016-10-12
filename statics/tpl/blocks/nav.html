@@ -1,0 +1,28 @@
+<!-- 左侧菜单list Start-->
+<ul ng-controller="IndexController" class="nav">
+ <li ng-class="{active:$state.includes('app.collect')}" ng-repeat="menu in siteMenuData" class="active">
+    <a href class="auto">      
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+      <i class="{{menu.icon}}"></i>
+      <span>{{menu.itemname}}</span>
+    </a>
+    
+    <ul class="nav nav-sub dk" >
+      <li class="nav-sub-header">
+        <a href>
+          <span>{{menu.itemname}}</span>
+        </a>
+      </li>
+      <li ui-sref-active="active" ng-repeat="subMenu in menu.list">
+        <a ui-sref="{{subMenu.url}}">
+          <span>{{subMenu.name}}</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
+<!-- 左侧菜单list End-->
+

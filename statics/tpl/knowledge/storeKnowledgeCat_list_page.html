@@ -1,0 +1,64 @@
+<!-- 知识库列表分页数据 -->
+<div class="table-responsive">
+    <table class="table  b-t b-light">
+        <thead>
+            <tr style="background-color: #EAF0F7;">
+                <th class="col-lg-2">名称</th>
+                <th class="col-lg-2">编号</th>
+                <th class="col-lg-2">创建时间</th>
+                <th class="col-lg-4">移动</th>
+                <th class="col-lg-2">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="category in categorys" cid="{{category.id}}" storeId="{{category.storeid}}" cparentID="{{category.parentid}}" level="{{category.level}}" ng-show="category.show">
+                <td>
+                        <div style="float:left;" class="jiange{{category.level}}">
+                            <button class="btn btn-sm btn-default" ng-click="showSonCat(topCategory.categoryId)" cid="{{topCategory.categoryId}}"  ng-if="topCategory.moreless&&topCategory.hasSon" >
+                                <i class="fa fa-plus text">
+                                </i>                              
+                            </button>
+                            <button class="btn btn-sm btn-default" ng-click="hideSonCat(topCategory.categoryId)" cid="{{topCategory.categoryId}}"  ng-if="!topCategory.moreless&&topCategory.hasSon" >
+                                <i class="fa fa-minus text" ></i>
+                            </button>
+                            <span  ng-if="!topCategory.hasSon" style="padding-left:  30px;">&nbsp;</span>
+                            <span>{{category.title}}</span>
+                        </div>
+                            
+
+                </td>
+                <td>{{category.id}}</td>
+                <td>{{category.create_time}}</td>
+                <td>
+                    <div class="row list-icon">
+                        <div class="col-md-1 col-sm-2" ng-click="downBum($event)" popover-trigger="mouseenter" popover="置底" style="cursor:pointer"><i class="glyphicon glyphicon-save"></i></div>
+                        <div class="col-md-1 col-sm-2" ng-click="down($event)" popover-trigger="mouseenter" popover="下移" style="cursor:pointer"> <i class="fa fa-arrow-down"></i></div>
+                        <div class="col-md-1 col-sm-2" ng-click="up($event)" popover-trigger="mouseenter" popover="上移" style="cursor:pointer"><i class="fa fa-arrow-up" ></i> </div>
+                        <div class="col-md-1 col-sm-2" ng-click="upTop($event)" popover-trigger="mouseenter" popover="置顶" style="cursor:pointer"><i class="glyphicon glyphicon-open"></i>  </div>
+                        
+                    </div>
+                </td>
+                <td>
+                    <div class="btn-group dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" aria-haspopup="true" aria-expanded="false" style="width: 50px;height: 30px;">操作<span class="caret"></span></button>
+                        <ul class="dropdown-menu">  
+                            <li><a href="" ng-click="edit(category.id, category.title)">编辑</a></li>
+                            <li><a href="" class="delectCat" ng-click="delect(category.id)">删除</a></li>
+                            <li><a ui-sref="app.knowledge.listStoreKnowledge({cid:topCategory.categoryId,sid:topCategory.storeId})" href="#/app/knowledge/listStoreKnowledges/1">查看</a></li>
+                            <li><a href="" ng-hide="{{category.level>3}}"  ng-click="add(category.title, category.id, '')">添加子类</a></li>
+                        </ul>
+                    </div>
+                </td>
+
+            </tr>
+            <!-- 查询无数据 -->
+            <tr  ng-if="!categorys.length">
+                <td class="text-center" colspan="8" >无数据</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="panel-footer">
+    <div class="text-center" style="height: 50px">
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<!--知识库分类管理页-->
+<div class="container-fluid listStoreKnowledge wrapper-md" ng-controller="knowledgeCatController" ng-init="load()">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="bs-example form-horizontal ng-pristine ng-valid">
+                <div class="form-group">
+                    <label class="col-lg-1 control-label" style="line-height: 30px;">来源：</label>
+                    <div class="col-lg-11" style="line-height: 30px;">
+                        <div class="radio">
+                            <label class="base-search-label ng-scope i-checks pr8" ng-repeat="store in storeArr">
+                                <input type="radio" ng-model="storeId"  value="{{store.id}}" name="optionsRadios" ng-click="chooseKt(store.id,0)">
+                                <i></i>
+                                {{store.name_ch}}              
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-1 control-label">&nbsp;</label>
+                    <div class="col-lg-1">
+                        <div class="radio">
+                            <label class="base-search-label base-search-label-btn"></label>
+                            <button class="btn m-b-xs w-xs btn-success" ng-click="add('无', 0,1)" style="width: 100px;">
+                                添加分类
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <!--    表格数据   -->
+        <div ng-include="'statics/tpl/knowledge/storeKnowledgeCat_list_page.html'" ></div>
+    </div>
+    <div>
+        <div  ng-include="'statics/tpl/knowledge/storeKnowledgeCat_detail.html'"></div>
+    </div>
+</div>
+
