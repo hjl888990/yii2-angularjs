@@ -36,7 +36,7 @@ $config = [
         ],
         'urlManager' => [
             //这个baseUrl 最终也会决定homeUrl的去处相当于给当前应用指定一个域名然后真个应用的                                路由都基于这个域名跳转
-            'baseUrl' => 'http://hjl.yiidemo.oneplus.cn/',
+            'baseUrl' => 'http://hjl.yii.cn/',
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => false,
             'showScriptName' => false,

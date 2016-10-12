@@ -12,7 +12,7 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
 
                 // config
                 $scope.app = {
-                    name: 'OnePlus Knowledge',
+                    name: 'Knowledge Mgt',
                     version: '1.1.3',
                     // for chart colors
                     color: {

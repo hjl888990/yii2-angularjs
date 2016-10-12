@@ -3,9 +3,9 @@
 return [
     'class' => 'yii\db\Connection',
     // 配置主服务器
-    'dsn' => 'mysql:host=localhost;dbname=test',
+    'dsn' => 'mysql:host=172.21.107.208;dbname=hjl',
     'username' => 'root',
-    'password' => '123456',
+    'password' => '',
     'charset' => 'utf8',
    // 'tablePrefix' => 'tbl_',//表前缀
 
