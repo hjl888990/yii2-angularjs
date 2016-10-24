@@ -44,10 +44,18 @@ $config = [
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => 'localhost',
-            'port' => 6379,
+            'hostname' => '172.21.107.71',
+            'port' => 7000,
             'database' => 0,
            // 'dataTimeout' => 1,
+        ],
+        'session' => [
+            'class' => 'yii\redis\Session',
+            'redis' => [
+                'hostname' => '172.21.107.71',
+                'port' => 7000,
+                'database' => 0,
+            ]
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -69,11 +77,6 @@ $config = [
         'db' => $db,
     ],
     'params' => $params,
-    'controllerMap' => [
-        'hello' => [
-            'class' => 'app\commands\HelloController',
-        ]
-    ],
 ];
 
 if (YII_ENV_DEV) {
@@ -81,7 +84,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        'allowedIPs'=>array('172.21.104.25')
+        'allowedIPs'=>array('172.21.104.25','172.21.104.1')
     ];
 
     $config['bootstrap'][] = 'gii';

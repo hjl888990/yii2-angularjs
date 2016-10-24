@@ -1,7 +1,8 @@
 <?php
-namespace components;
+namespace app\models;
 
-use components\validateCode\validateCode1;
+use app\models\validateCode\validateCode1;
+
 class factoryCode{
 
 	/**

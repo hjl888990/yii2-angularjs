@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\entity;
 
 /**
  * This is the model class for table "user".
@@ -36,98 +36,13 @@ class UserForm extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
-    public function getId() {
-        return $this->id;
-    }
-
-    public function setId($id) {
-        $this->id = $id;
-    }
-    public function getAccount() {
-        return $this->account;
-    }
-
-    public function setAccount($account) {
-        $this->account = $account;
-    }
-
-        
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getPassword() {
-        return $this->password;
-    }
-
-    public function getAge() {
-        return $this->age;
-    }
-
-    public function getSex() {
-        return $this->sex;
-    }
-
-    public function getPhone() {
-        return $this->phone;
-    }
-
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function getCreate_time() {
-        return $this->create_time;
-    }
-
-    public function setName($name) {
-        $this->name = $name;
-    }
-
-    public function setPassword($password) {
-        $this->password = $password;
-    }
-
-    public function setAge($age) {
-        $this->age = $age;
-    }
-
-    public function setSex($sex) {
-        $this->sex = $sex;
-    }
-
-    public function setPhone($phone) {
-        $this->phone = $phone;
-    }
-
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-
-    public function setCreate_time($create_time) {
-        $this->create_time = $create_time;
-    }
-    
-    public function getUpdate_time() {
-        return $this->update_time;
-    }
-
-    public function setUpdate_time($update_time) {
-        $this->update_time = $update_time;
-    }
-
-    
-    /**
-     * @inheritdoc
-     */
     public function rules() {
         return array(
-            array(['account','name','password', 'age', 'sex', 'phone', 'email','create_time'], 'required', 'on' => ['add']), //add场景应用
-            array(['account','name','password', 'age', 'sex', 'phone', 'email','update_time'], 'required', 'on' => ['update']), //update场景应用
+            array(['account','name','password', 'age', 'sex', 'phone', 'email'], 'required', 'on' => ['add']), //add场景应用
+            array(['account','name','password', 'age', 'sex', 'phone', 'email'], 'required', 'on' => ['update']), //update场景应用
             array(['account', 'password'], 'required', 'on' => ['login']), //login场景应用
-            array('account', 'unique', 'message' => '账号已占用!'),
-            array('email', 'unique', 'message' => '邮箱已占在!'),
+            array('account', 'unique', 'message' => '账号已占用!','on' => ['add','update']),
+            array('email', 'unique', 'message' => '邮箱已占在!','on' => ['add','update']),
             array('account', 'string', 'max' => 10, 'min' => 6, 'tooLong' => '账号长度为6-10位字符', 'tooShort' => '账号长度为6-10位字符!'),
             array('name', 'string', 'max' => 10, 'min' => 1, 'tooLong' => '用户名长度为1-10位字符', 'tooShort' => '用户名长度为1-10位字符!'),
             array('password', 'string', 'max' => 20, 'min' => 6, 'tooLong' => '密码长度为6-22位字符', 'tooShort' => '密码长度为6-22位字符!'),
@@ -139,7 +54,28 @@ class UserForm extends \yii\db\ActiveRecord {
         );
     }
     
+    public function beforeSave()  
+    {  
+        if(parent::beforeSave(true)){  
+            if($this->getIsNewRecord()){ 
+                $pass = md5($this->getAttribute('password'));
+                $params = ['password'=>$pass,'create_time'=>time() * 1000];
+                $this->setAttributes($params);
+                // $this->create_user_id = Yii::app()->user->id;  
+            }else{
+                $pass = md5($this->getAttribute('password'));
+                $params = ['password'=>$pass,'update_time'=>time() * 1000];
+                $this->setAttributes($params);
+               // $this->update_user_id = Yii::app()->user->id;  
+            }  
+            return true;  
+        }else{  
+            return false;  
+        }  
+    }  
 
+    
+    
    public function getUsers()
    {
       return $this->hasMany(UserForm::className(), array('id' => 'id'));

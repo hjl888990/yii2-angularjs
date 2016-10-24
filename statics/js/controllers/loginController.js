@@ -61,6 +61,7 @@ angular.module('app.controllers.loginController', [])
                     }
                 })()
             } 
+            
             //检测用户是否登录
             $http.get('/index.php?r=login/ajax-check-login').success(function(d) {
                 if (d.ret == '1') {

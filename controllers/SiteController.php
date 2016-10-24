@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
+use app\models\common\Response;
 
 class SiteController extends Controller {
 
@@ -28,18 +29,11 @@ class SiteController extends Controller {
         ),
     );
     
-        /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
+    public function behaviors() {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            'access' => [
+                'class' => 'app\models\filters\AccessFilter',
+                'except' => [''],
             ],
         ];
     }
@@ -51,14 +45,18 @@ class SiteController extends Controller {
     
 
     public function actionAjaxLeftMenu() {
+        $session = Yii::$app->session;
+        $session->open();
+        $name = $session->get('name');
+
         $Menu = $this->_cnMenu;
         $retunMenu = array();
         foreach ($Menu as $k => $v) {
             $v = $v[0];
             $v['count'] = count($v['list']);
-            $v['user'] = array('userName'=>$this->user['name']);
+            $v['user'] = array('userName'=>$name);
             $retunMenu[] = $v;
         }
-        $this->retJSON(1, $retunMenu, $errMsg = '');
+        Response::outputSuccess($retunMenu);
     }
 }

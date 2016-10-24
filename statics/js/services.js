@@ -104,15 +104,9 @@ angular.module('app.services', [])
                     return config;
                 },
                 'response': function(response) {
-
                     // 未登录
-                    if (response.data.ret == 401) {
-                        window.location.href = response.data.data;
-                        return $q.reject('');
-                    }
-                    if (response.data.ret == 405) {
-                        // $state.go('access.signin');
-                        window.location.href = response.data.data.signinUrl;
+                    if (response.data.ret == 0 && response.data.errCode == 4) {
+                        window.location.href ='/#/access/signin';
                         return $q.reject('');
                     }
                     // 响应成功

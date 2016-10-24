@@ -1,6 +1,6 @@
 <?php
 
-namespace components\validateCode;
+namespace app\models\validateCode;
 
 use Yii;
 

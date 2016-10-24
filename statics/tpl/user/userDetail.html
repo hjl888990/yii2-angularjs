@@ -8,6 +8,11 @@
                     <h2 class="text-u-c m-b-none" style="margin-top: 0px;">添加用户</h2>
                 </div>
                 <ul class="list-group">
+                    <li class="list-group-item padding-right-50" ng-show="createReturnMessage != ''" style="text-align: center;">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding colorRed" ng-bind="createReturnMessage"></span>
+                        </label>
+                    </li>
                     <li class="list-group-item padding-right-50">
                         <label class="base-search-label ng-scope">
                             <span class="ng-binding fixed-width-span ">
@@ -17,7 +22,6 @@
                                 ：
                             </span>
                             <input type="text" name="name" ng-trim="true" ng-minlength="6"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userCreateForm.account" required>
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.account"></span>
                         </label>
                     </li>
                     <li class="list-group-item padding-right-50">
@@ -29,7 +33,6 @@
                                 ：
                             </span>
                             <input type="text" name="name" ng-trim="true" ng-minlength="1"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userCreateForm.name" required>
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.name"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -41,7 +44,6 @@
                                 ：
                             </span>
                             <input type="password" name="password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="userCreateForm.password" required>   
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.password"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -53,7 +55,6 @@
                                 ：
                             </span>
                             <input type="text" name="age" ng-trim="true" ng-maxlength="3" class="form-control  base-search-input"  ng-model="userCreateForm.age" required>        
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.age"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -65,7 +66,6 @@
                                 ：
                             </span>
                             <select class="form-control"  name="sex" ng-model="userCreateForm.sex" ng-options="sex.id as sex.name for sex in sexOptions" required></select>
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.sex"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -77,7 +77,6 @@
                                 ：
                             </span>
                             <input type="email" name="email" ng-trim="true" ng-maxlength="30" class="form-control  base-search-input"  ng-model="userCreateForm.email" required>  
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.email"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -89,7 +88,6 @@
                                 ：
                             </span>
                             <input type="number" name="phone" ng-trim="true" ng-maxlength="11" class="form-control  base-search-input"  ng-model="userCreateForm.phone" required>   
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.phone"></span>
                         </label>
                     </li>
                 </ul>
@@ -197,6 +195,11 @@
                     <h2 class="text-u-c m-b-none" style="margin-top: 0px;">更新用户</h2>
                 </div>
                 <ul class="list-group">
+                    <li class="list-group-item padding-right-50" ng-show="updateReturnMessage != ''" style="text-align: center;">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding colorRed" ng-bind="updateReturnMessage"></span>
+                        </label>
+                    </li>
                     <li class="list-group-item padding-right-50">
                         <label class="base-search-label ng-scope">
                             <span class="ng-binding fixed-width-span ">
@@ -206,7 +209,6 @@
                                 ：
                             </span>
                             <span class="ng-binding fontColor" ng-bind="userUpdateForm.account"></span>
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.account"></span>
                         </label>
                     </li>
                     <li class="list-group-item padding-right-50">
@@ -218,9 +220,7 @@
                                 ：
                             </span>
                             <input type="text" name="name" ng-trim="true" ng-minlength="1"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userUpdateForm.name" required>
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.name"></span>
                         </label>
-                        <span class="ng-binding colorRed" ng-bind="createReturnMessage.name"></span>
                     </li>
                     <li class="list-group-item  padding-right-50">
                         <label class="base-search-label ng-scope">
@@ -231,7 +231,6 @@
                                 ：
                             </span>
                             <input type="password" name="password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="userUpdateForm.password" required>   
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.password"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -243,7 +242,6 @@
                                 ：
                             </span>
                             <input type="number" name="age" ng-trim="true" ng-maxlength="3" class="form-control  base-search-input"  ng-model="userUpdateForm.age" required>        
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.age"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -255,7 +253,6 @@
                                 ：
                             </span>
                             <select class="form-control"  name="sex" ng-model="userUpdateForm.sex" ng-options="sex.id as sex.name for sex in sexOptions" required></select>
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.sex"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -267,7 +264,6 @@
                                 ：
                             </span>
                             <input type="email" name="email" ng-trim="true" ng-maxlength="30" class="form-control  base-search-input"  ng-model="userUpdateForm.email" required>  
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.email"></span>
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -279,7 +275,6 @@
                                 ：
                             </span>
                             <input type="text" name="phone" ng-trim="true" ng-maxlength="11" class="form-control  base-search-input"  ng-model="userUpdateForm.phone" required>   
-                            <span class="ng-binding colorRed" ng-bind="createReturnMessage.phone"></span>
                         </label>
                     </li>
                 </ul>

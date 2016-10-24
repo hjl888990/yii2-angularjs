@@ -5,13 +5,41 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\Pagination;
-use app\models\UserForm;
+use app\models\entity\UserForm;
+use app\models\common\Func;
 use services\RedisService;
+use app\models\exception\OPException;
 
 /**
  * CountrySearch represents the model behind the search form about `app\models\Country`.
  */
-class UserActiveRecordModel extends Model {
+class User extends Model {
+    
+    /**
+     * ִ执行登录
+     */
+    public function login($params) {
+        $isLogin = true;
+        $userForm = new UserForm();
+        $userForm->scenario = 'login';
+        $userForm->setAttributes($params);
+        if ($userForm->validate()) {//验证输入
+            if(isset($params['password'])){
+                $params['password'] = md5($params['password']);
+            }
+            $result = $this->checkUser($params);
+            if (!empty($result)) {
+                $result ['timestamp'] = time();
+                Func::setSession($result);
+                $isLogin = true;
+            } else {
+                $isLogin = false;
+            }
+        }else{
+            throw new \Exception($userForm->getFirstError());
+        }
+        return $isLogin;
+    }
 
     /**
      * 分页查询
@@ -98,40 +126,14 @@ class UserActiveRecordModel extends Model {
      * 详情查询
      */
     public function searchUserDetail($searchParams) {
-        if (!UserForm::openRedis) {//不开启缓存
             $userForm = UserForm::find()->addSelect('account,age,create_time,email,id,name,phone,sex')->andWhere($searchParams)->limit(1)->one();
             $result = '';
             if (!empty($userForm)) {
                 $result = $userForm->attributes;
             }else{
-                Yii::error('获取用户信息失败,用户信息为空'. json_encode($searchParams), 'user');
+                throw new OPException(OPException::ERR_USER_NOT_EXIST);
             }
             return $result;
-        } else {//开启缓存
-            $redisService = new RedisService();
-            $userRedisExists = $redisService->exists('user_' . $searchParams['id']); //先读redis缓存
-            if ($userRedisExists == 1) {
-                $userRedisResult = $redisService->hmGet('user_' . $searchParams['id'], array('account','name','id', 'email', 'age', 'phone', 'sex', 'create_time'));
-                $userRedisResult['age'] = (int)$userRedisResult['age'];
-                $userRedisResult['sex'] = (int)$userRedisResult['sex'];
-                return $userRedisResult;
-            } else {//读数据库，并存入redis缓存内
-                $userForm = UserForm::find()->addSelect('account,age,create_time,email,id,name,phone,sex')->andWhere($searchParams)->limit(1)->one();
-                $result = array();
-                if (empty($userForm)) {
-                    return $result;
-                } else {
-                    $result = $userForm->attributes;
-                    if ($userRedisExists !== false) {
-                        $redisService = new RedisService();
-                        
-                        $redisService->hmSet('user_' . $result['id'], $result); //存入redis缓存内
-                        $redisService->setTimeOut('user_' . $result['id'], UserForm::openRedisTimeOut); //有效期10天
-                    }
-                    return $result;
-                }
-            }
-        }
     }
 
     /**
@@ -139,35 +141,16 @@ class UserActiveRecordModel extends Model {
      */
     public function createUser($params) {
         $userForm = new UserForm();
-        $connection = $userForm->getDb();
         $userForm->scenario = 'add';
         $userForm->setAttributes($params);
-        $transaction = $connection->beginTransaction();
-        try {
-            if ($userForm->validate()) {//验证输入
-                $result = $userForm->save();
-                if ($result) {
-                    $transaction->commit();
-                    if (UserForm::openRedis) {//开启缓存
-                        $id = $userForm->attributes['id'];
-                        $redisService = new RedisService();
-                        $params['id'] = $id;
-                        $params['password'] = null;
-                        $redisService->hmSet('user_' . $id, $params); //存入redis缓存内
-                        $redisService->setTimeOut('user_' . $id,UserForm::openRedisTimeOut);//有效期10天
-                    }
-                } else {
-                    $transaction->rollBack();
-                }
-                return $result;
-            } else {
-                // 验证失败：$errors 是一个包含错误信息的数组
-                $errors = $userForm->errors;
-                return $errors;
+        if ($userForm->validate()) {//验证输入
+            $result = $userForm->save();
+            if (!$result) {
+                throw new \Exception('用户创建失败');
             }
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-            $transaction->rollBack();
+            return $result;
+        } else {
+            throw new \Exception($userForm->getFirstError());
         }
     }
 
@@ -175,43 +158,22 @@ class UserActiveRecordModel extends Model {
      * 更新
      */
     public function updateUser($params) {
-        $userForm = new UserForm();
-        $redisService = new RedisService();
-        $connection = $userForm->getDb();
-        if (isset($params['id'])) {
-            $user = UserForm::findOne((int) $params['id']);
-            if (empty($user)) {
-                return false;
-            } else {
-                $user->scenario = 'update';
-                $user->setAttributes($params);
-                if ($user->validate()) {//验证输入
-                    if (UserForm::openRedis) {//开启缓存
-                        $userRedisExists = $redisService->exists('user_' . $params['id']); //检测redis缓存
-                        if ($userRedisExists == 1) {
-                            $redisService->delete('user_' . $params['id']); //删除
-                        }
-                    }
-                    $transaction = $connection->beginTransaction();
-                    $result = $user->save();
-                    if ($result == 1) {
-                        $transaction->commit();
-                        if (UserForm::openRedis) {//开启缓存
-                            $redisService->hmSet('user_' . $params['id'], $params); //存入redis缓存内
-                            $redisService->setTimeOut('user_' . $params['id'],UserForm::openRedisTimeOut);//有效期10天
-                        }
-                        return true;
-                    } else {
-                        $transaction->rollBack();
-                    }
-                } else {
-                    // 验证失败：$errors 是一个包含错误信息的数组
-                    $errors = $user->errors;
-                    return $errors;
-                }
-            }
+        $user = UserForm::findOne((int) $params['id']);
+        if (empty($user)) {
+            throw new OPException(OPException::ERR_USER_NOT_EXIST);
         } else {
-            return false;
+            $user->scenario = 'update';
+            $user->setAttributes($params);
+            if ($user->validate()) {//验证输入
+                $result = $user->save();
+                if ($result == 1) {
+                    return true;
+                } else {
+                    throw new \Exception('更新用户信息失败');
+                }
+            } else {
+                throw new \Exception($user->getFirstError());
+            }
         }
     }
 
@@ -219,23 +181,16 @@ class UserActiveRecordModel extends Model {
      * 删除
      */
     public function deleteUser($params) {
-        if (UserForm::openRedis) {//开启缓存
-            $redisService = new RedisService();
-            $userRedisExists = $redisService->exists('user_' . $params['id']); //先读redis缓存
-            if ($userRedisExists == 1) {
-                $redisService->delete('user_' . $params['id']);
-            }
-        }
         $userForm = UserForm::find()->addSelect('id')->andWhere($params)->one();
         if (!empty($userForm)) {
             $delResult = $userForm->delete();
             if ($delResult == 1) {
                 return true;
             } else {
-                return false;
+                throw new \Exception('删除用户信息失败');
             }
         } else {
-            return false;
+            throw new OPException(OPException::ERR_USER_NOT_EXIST);
         }
     }
     

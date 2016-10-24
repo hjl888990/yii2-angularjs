@@ -5,7 +5,8 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
     $scope.userCreateForm = {account:'',name: '', password: '', email: '', age: '', sex: '', phone: ''};
     $scope.userDetail = {account:'',name: '', password: '', email: '', age: '', sex: '', phone: ''};
     $scope.userUpdateForm = {account:'',name: '', email: '', age: '', sex: '', phone: ''};
-    $scope.createReturnMessage = {account:'',name: '', password: '', email: '', age: '', sex: '', phone: ''};
+    $scope.createReturnMessage = '';
+    $scope.updateReturnMessage = '';
     $scope.sexOptions = [{id: 1, name: '男'}, {id: 2, name: '女'}];
     var tipDialogTimeOut = 2000;
 
@@ -111,7 +112,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
                 tipDialog.open({title: '提示信息', template: 'Successfuly', isOk: true, timeOut: tipDialogTimeOut});
             } else {
                 if (res.ret == 0) {
-                    $scope.createReturnMessage = res.data;
+                    $scope.createReturnMessage = res.errMsg;
                 } else {
                     easyDialog.close();
                     tipDialog.open({title: '提示信息', template: res.errMsg, isOk: true, timeOut: tipDialogTimeOut});
@@ -159,7 +160,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
                 tipDialog.open({title: '提示信息', template: 'Successfuly', isOk: true, timeOut: tipDialogTimeOut});
             } else {
                 if (res.ret === 0) {
-                    $scope.createReturnMessage = res.data;
+                    $scope.updateReturnMessage = res.errMsg;
                 } else {
                     easyDialog.close();
                     tipDialog.open({title: '提示信息', template: res.errMsg, isOk: true, timeOut: tipDialogTimeOut});
