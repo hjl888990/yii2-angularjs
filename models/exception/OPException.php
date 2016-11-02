@@ -35,7 +35,7 @@ class OPException extends \Exception {
         4 => '请先登录系统',
         10 => 'Auth failed',
         20 => 'Unsupported storage',
-        40 => 'Server connection failed.',
+        40 => 'Redis Server connection failed.',
         50 => 'Invalid key value.',
         100 => '账号未登录',
         101 => '账号不存在或密码错误',

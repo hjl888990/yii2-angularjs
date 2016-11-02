@@ -84,28 +84,10 @@ class Response extends \yii\base\Object
      * 输出失败的响应
      * @param   mixed   $data   数据
      */
-    public static function outputFailed($errCode = 0, $errMsg = 0, $data = null){
-        $res = array('ret'  =>0, 'errCode' => $errCode, 'errMsg'=> $errMsg, 'data'=> $data);
+    public function outputFailed(){
+        $res = array('ret'  =>0, 'errCode' =>$this->code, 'errMsg'=> $this->errMsg, 'data'   =>  $this->data);
         echo json_encode($res);
         exit();
     }
 
-    /**
-     * goto accoun to login
-     * return to $referer
-     * @param  string $referer [description]
-     * @return [type]           [description]
-     */
-    public static function toAccount($referer = '') 
-    {
-        $accountUrl  = trim(\Yii::$app->params['account_url'], '/');
-        $redirectUrl = $accountUrl . '/login?_x='.date('YmdHis');
-
-        if (!empty($referer)) {
-            $referer     = '&referer=' . base64_encode(htmlspecialchars($referer));
-            $redirectUrl = $redirectUrl . $referer;
-        }
-
-        header('Location: ' . $redirectUrl);
-    }
 }

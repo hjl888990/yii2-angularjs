@@ -1,10 +1,14 @@
 <?php
-namespace services;
+
+namespace app\services;
+
 use Yii;
+
 /**
  * 读取redis服务
  */
-class RedisService{
+class RedisService {
+
     /**
      * $key: hjl_*
      * 获取指定前缀的rediskey
@@ -13,6 +17,7 @@ class RedisService{
         $keys = Yii::$app->redis->executeCommand('KEYS', [$keyPrefix]);
         return $keys;
     }
+
     /**
      * 获取key的redis数据
      */
@@ -20,6 +25,7 @@ class RedisService{
         $result = Yii::$app->redis->executeCommand('GET', [$key]);
         return $result;
     }
+
     /**
      * 批量获取array(key1,key2····）的redis数据
      */
@@ -27,141 +33,155 @@ class RedisService{
         $result = Yii::$app->redis->executeCommand('MGET', $keyArray);
         return $result;
     }
+
     /**
      * 向redis添加元素$key—>$value
      */
-    public function set($key,$value) {
-        Yii::$app->redis->executeCommand('SET', [$key,$value]);
+    public function set($key, $value) {
+        return Yii::$app->redis->executeCommand('SET', [$key, $value]);
     }
+
     /**
      * 批量向redis添加元素array(key1=>value1,key2=>value2····)
      */
     public function mset($kvArray) {
-        $msetData =array();
-        foreach ($kvArray as $k=>$v){
-                $msetData[]=$k;
-                $msetData[]=$v;
+        $msetData = array();
+        foreach ($kvArray as $k => $v) {
+            $msetData[] = $k;
+            $msetData[] = $v;
         }
-        Yii::$app->redis->executeCommand('MSET', $msetData);
+        return Yii::$app->redis->executeCommand('MSET', $msetData);
     }
 
     /**
      * 向redis添加元素$key—>$value,过期时间$time_out(单位秒)
      */
-    public function setexData($key,$value,$time_out) {
-        Yii::$app->redis->executeCommand('SETEX', [$key,$time_out,$value]) ;
+    public function setexData($key, $value, $time_out) {
+        return Yii::$app->redis->executeCommand('SETEX', [$key, $time_out, $value]);
     }
-    
+
+    /**
+     * 向redis元素$key自增
+     */
+    public function incr($key) {
+        return Yii::$app->redis->executeCommand('INCR', [$key]);
+    }
+
     /**
      * 判断$key是否存在
      * return 1存在；0不存在
      */
     public function exists($key) {
-        $result = Yii::$app->redis->executeCommand('EXISTS', [$key]) ;
+        $result = Yii::$app->redis->executeCommand('EXISTS', [$key]);
         return $result;
     }
+
     /**
      * 设置$key的生存时间，单位秒
      */
-    public function setTimeOut($key,$timeout) {
-        $result = Yii::$app->redis->executeCommand('EXPIRE', [$key,$timeout]) ;
+    public function setTimeOut($key, $timeout) {
+        $result = Yii::$app->redis->executeCommand('EXPIRE', [$key, $timeout]);
         return $result;
     }
-    
-    
+
     /**
      * delete  删除指定key的值
      */
     public function delete($key) {
-        Yii::$app->redis->executeCommand('DEL', [$key]) ;
+        return Yii::$app->redis->executeCommand('DEL', [$key]);
     }
-    
+
     /**
      * 根据前缀key删除所有
      * @param type $keyPrefix
      */
     public function deleteByPrefix($keyPrefix) {
-        $keys = Yii::$app->redis->executeCommand('KEYS', [$keyPrefix.'*']);
+        $keys = Yii::$app->redis->executeCommand('KEYS', [$keyPrefix . '*']);
         if (!empty($keys) && is_array($keys)) {
-            foreach ($keys as $key){
-               $this->delete($key); 
+            foreach ($keys as $key) {
+                $this->delete($key);
             }
         }
     }
-    
+
     /**
      * 移除生存时间到期的key
      */
     public function persist($key) {
-        Yii::$app->redis->executeCommand('PERSIST', [$key]) ;
+        return Yii::$app->redis->executeCommand('PERSIST', [$key]);
     }
-    
+
     /**
      * 开始事物
      */
     public function multi() {
-        return Yii::$app->redis->executeCommand('MULTI') ;
+        return Yii::$app->redis->executeCommand('MULTI');
     }
+
     /**
      * 结束事物
      */
     public function exec() {
-        return Yii::$app->redis->executeCommand('EXEC') ;
+        return Yii::$app->redis->executeCommand('EXEC');
     }
 
-    /*************************Hash操作***********************/ 
+    /*     * ***********************Hash操作********************** */
+
     /**
      * hSet
      * $redis->hSet('hashkey', 'key', 'value');
      * 向名称为hashkey的hash中添加元素key—>hello
      */
-    public function hSet($hashkey,$key,$value) {
-        Yii::$app->redis->executeCommand('HSET', [$hashkey,$key,$value]) ;
+    public function hSet($hashkey, $key, $value) {
+        return Yii::$app->redis->executeCommand('HSET', [$hashkey, $key, $value]);
     }
+
     /**
      * hmSet
      * $redis->hmSet('hashkey',array('key1'=>'v1','key2'=>'v2'));
      * 向名称为hashkey的hash中批量添加元素
      */
-    public function hmSet($hashkey,$kvArray) {
-        $hmset  = array();
+    public function hmSet($hashkey, $kvArray) {
+        $hmset = array();
         $hmset[] = $hashkey;
-        foreach ($kvArray as $k=>$v){
+        foreach ($kvArray as $k => $v) {
             $hmset[] = $k;
             $hmset[] = $v;
         }
-        Yii::$app->redis->executeCommand('HMSET', $hmset) ;
+        return Yii::$app->redis->executeCommand('HMSET', $hmset);
     }
-    
+
     /**
      * hGet
      * $redis->hGet('hashkey', 'key');
      * 返回名称为h的hashkey中key对应的value
      */
-    public function hGet($hashkey,$key) {
-        $result = Yii::$app->redis->executeCommand('HGET', [$hashkey,$key]);
+    public function hGet($hashkey, $key) {
+        $result = Yii::$app->redis->executeCommand('HGET', [$hashkey, $key]);
         return $result;
     }
+
     /**
      * hmGet
      * $redis->hmGet('hashkey', array(key1', 'key2'));
-     *返回名称为hashkey的hash中key1,key2对应的value
+     * 返回名称为hashkey的hash中key1,key2对应的value
      */
-    public function hmGet($hashkey,$kArray) {
-        $hmset  = array();
+    public function hmGet($hashkey, $kArray) {
+        $hmset = array();
         $data = array();
         $hmset[] = $hashkey;
-        foreach ($kArray as $k=>$v){
+        foreach ($kArray as $k => $v) {
             $hmset[] = $v;
         }
         $result = Yii::$app->redis->executeCommand('HMGET', $hmset);
-        if(!empty($result)){
+        if (!empty($result)) {
             foreach ($kArray as $k => $v) {
                 $data[$v] = $result[$k];
             }
         }
-        return  $data;
+        return $data;
     }
+
     /**
      * hLen
      * $redis->hLen('hashkey');
@@ -171,23 +191,25 @@ class RedisService{
         $result = Yii::$app->redis->executeCommand('HLEN', [$hashkey]);
         return $result;
     }
+
     /**
      * hExists
      * $redis->hExists('hashkey', 'key');
      * 名称为hashkey的hash中是否存在键名字为key的域
      * return 1存在；0不存在
      */
-    public function hExists($hashkey,$key) {
-        $result = Yii::$app->redis->executeCommand('HEXISTS', [$hashkey,$key]);
+    public function hExists($hashkey, $key) {
+        $result = Yii::$app->redis->executeCommand('HEXISTS', [$hashkey, $key]);
         return $result;
     }
+
     /**
      * hDelKey
      * $redis->hDel('hashkey', 'key');
      * 删除名称为hashkey的hash中键为key的域
      */
-    public function hDel($hashkey,$key) {
-        Yii::$app->redis->executeCommand('HDEL',[$hashkey,$key]);
+    public function hDel($hashkey, $key) {
+        Yii::$app->redis->executeCommand('HDEL', [$hashkey, $key]);
     }
 
     /**
@@ -199,6 +221,7 @@ class RedisService{
         $result = Yii::$app->redis->executeCommand('HKEYS', [$hashkey]);
         return $result;
     }
+
     /**
      * hVals
      * $redis->hVals('hashkey');
@@ -208,6 +231,7 @@ class RedisService{
         $result = Yii::$app->redis->executeCommand('HVALS', [$hashkey]);
         return $result;
     }
+
     /**
      * hGetAll
      * $redis->hGetAll('hashkey');
@@ -216,5 +240,44 @@ class RedisService{
     public function hGetAll($hashkey) {
         return Yii::$app->redis->executeCommand('HGETALL', [$hashkey]);
     }
-        /*************************SIT操作***********************/ 
-  }
+
+    /*     * ***********************SET操作********************** */
+
+    /**
+     * setAdd
+     * $redis->setAdd('setkey','value');
+     * 向键值为setkey的set中插入value值，失败返回false
+     */
+    public function setAdd($setkey, $value) {
+        return Yii::$app->redis->executeCommand('SADD', [$setkey, $value]);
+    }
+    
+    /**
+     * getScard
+     * $redis->getScard('setkey'');
+     * 返回key为getScard的数量
+     */
+    public function getScard($setkey) {
+        return Yii::$app->redis->executeCommand('SCARD', [$setkey]);
+    }
+    
+    /**
+     * getScard
+     * $redis->getScard('setkey','count');
+     * 返回key为getScard的指定数量的值
+     **/
+    public function getSrandmember($setkey,$count = 1) {
+        return Yii::$app->redis->executeCommand('SRANDMEMBER', [$setkey,$count]);
+    }
+    
+    /**
+     * srem
+     * $redis->srem('setkey','value');
+     * 移除key为getScard的值
+     **/
+    public function srem($setkey, $value) {
+        return Yii::$app->redis->executeCommand('SREM', [$setkey, $value]);
+    }
+    
+
+}

@@ -1,6 +1,5 @@
 <?php
 
-Yii::setAlias('@services', dirname(__DIR__) . '/services');
 Yii::setAlias('@components', dirname(__DIR__) . '/components');
 
 $params = require(__DIR__ . '/params.php');
@@ -55,7 +54,8 @@ $config = [
                 'hostname' => '172.21.107.71',
                 'port' => 7000,
                 'database' => 0,
-            ]
+            ],
+            //'sessionName'=>'nihao'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

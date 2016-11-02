@@ -99,6 +99,7 @@ angular.module('app.controllers.loginController', [])
                     if (d.ret == '1') {
                         $rootScope.isLogin = true;
                         $state.go('app.user');
+                        $scope.ssoLogin(d.data);
                     } else {
                         // 刷新验证码
                         $scope.captchUrl = captchUrl + '&num=' + Math.random();
@@ -110,5 +111,20 @@ angular.module('app.controllers.loginController', [])
                     $scope.authError = 'Server Error';
                 });
             };
+            
+            $scope.ssoLogin = function(token) {
+                var host = window.location.host;
+                var ssoUrl = ['hjl.yii.cn','huangjinlong.yii.devel.oneplus.cn'];
+                var queryParams = {token:token};
+                for(var i =0;i<ssoUrl.length;i++){
+                    if(ssoUrl[i] == host){
+                        continue;
+                    }else{
+                        $http.get('http://'+ssoUrl[i]+'/index.php?r=login/sso-login', {params: queryParams}).success(function (res) {});
+                    }
+                }
+            }
+            
+            
 			
         })

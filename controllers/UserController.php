@@ -8,6 +8,7 @@ use app\models\Filters;
 use app\models\User;
 use app\models\exception\OPException;
 use app\models\common\Response;
+use app\services\RedisService;
 
 /**
  * CountryController implements the CRUD actions for Country model.
@@ -21,7 +22,7 @@ class UserController extends Controller {
         return [
             'access' => [
                 'class' => 'app\models\filters\AccessFilter',
-                'except' => [''],
+                'except' => ['test'],
             ],
         ];
     }
@@ -34,7 +35,7 @@ class UserController extends Controller {
         try {
             //参数过滤
             $request = Yii::$app->getRequest()->getParam();
-            $request = Filters::filter(json_encode($request));
+            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE));
             $request = json_decode($request, true);
 
             $userModel = new User();
@@ -63,7 +64,8 @@ class UserController extends Controller {
             Response::outputSuccess($dataProvider);
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 
@@ -75,9 +77,9 @@ class UserController extends Controller {
     public function actionCreate() {
         try {
             $request = Yii::$app->getRequest()->post('user');
-            $request = Filters::filter(json_encode($request));
+            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE));
             $user = json_decode($request, true);
-
+            
             $userModel = new User();
             $result = $userModel->createUser($user);
             if ($result) {
@@ -87,7 +89,8 @@ class UserController extends Controller {
             }
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 
@@ -115,7 +118,8 @@ class UserController extends Controller {
             }
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 
@@ -128,8 +132,9 @@ class UserController extends Controller {
     public function actionUpdate() {
         try {
             $request = Yii::$app->getRequest()->post('user');
-            $request = Filters::filter(json_encode($request));
+            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE));
             $user = json_decode($request, true);
+            
 
             if (!isset($user['id']) || empty($user['id'])) {
                 throw new OPException(OPException::ERR_SYS_PARAM_ERROR);
@@ -143,7 +148,8 @@ class UserController extends Controller {
             }
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 
@@ -167,7 +173,39 @@ class UserController extends Controller {
             }
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
+        }
+    }
+    
+
+    public function actionTest() {
+        try {
+            $r = new RedisService();
+            $account = $r->incr('account');
+            if($account === false){
+                throw new OPException(OPException::ERR_REDIS_CONNECT_ERROR);
+            }
+            $user = [
+                "name"=>"dasda",
+                "password"=>"231312",
+                "email"=>$account."@qq.com",
+                "age"=>"12",
+                "sex"=>"1",
+                "phone"=> "13627009379",
+                "account" =>$account
+            ];
+            $userModel = new User();
+            $result = $userModel->createUser($user);
+            if ($result) {
+                Response::outputSuccess($result);
+            } else {
+                throw new OPException(OPException::ERR_SYS_ERROR);
+            }
+        } catch (\Exception $exc) {
+            Yii::error($exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 
@@ -175,12 +213,18 @@ class UserController extends Controller {
      * 清楚缓存
      */
     public function actionClearRedis() {
-        $userModel = new User();
-        $result = $userModel->clearRedis();
-        if ($result) {
-            $this->retJSON(1, array(), '清楚缓存成功！');
-        } else {
-            $this->retJSON(0, array(), '清楚缓存失败！');
+        try {
+            $userModel = new User();
+            $result = $userModel->clearRedis();
+            if ($result) {
+                Response::outputSuccess($result);
+            } else {
+                throw new \Exception('清楚缓存失败！');
+            }
+        } catch (\Exception $exc) {
+            Yii::error($exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 

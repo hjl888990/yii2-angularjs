@@ -3,16 +3,19 @@
 namespace app\models\entity;
 
 /**
+ * 
  * This is the model class for table "user".
- *
- * @property string $code
- * @property string $name
- * @property integer $population
+ * 
  */
 class UserForm extends \yii\db\ActiveRecord {
     
     const openRedis = true;//是否开启redis缓存
     const openRedisTimeOut = 864000;//redis缓存有效期
+    
+    const userCreateSetCacheKeys = 'user_create_do';
+    const userCreateSetCacheKeysRedo = 'user_create_redo';
+    const userCreateHashCacheDetail = 'user_create_detail';
+    const userCreateHashCacheLock = 'user_create_lock';
 
     private $id; //自增主键
     private $account; //账号

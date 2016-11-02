@@ -8,6 +8,7 @@ use app\models\Filters;
 use app\models\factoryCode;
 use app\models\exception\OPException;
 use app\models\common\Response;
+use app\models\common\Encryption;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -20,6 +21,8 @@ use app\models\common\Response;
 class LoginController extends Controller
 {
     public $enableCsrfValidation = false;
+    
+    const prefix = 'hjlYII__';
     
 //    public function behaviors(){
 //        return [
@@ -35,7 +38,7 @@ class LoginController extends Controller
         try {
             //参数过滤
             $request = Yii::$app->getRequest()->post();
-            $request = Filters::filter(json_encode($request)); 
+            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE)); 
             $request = json_decode($request,true);
             //验证码验证
             $flag = factoryCode::validate(trim($request['verifyCode']), true);
@@ -47,13 +50,15 @@ class LoginController extends Controller
             //登录
             $model = new User();
             if ($result = $model->login($params)) {
-                Response::outputSuccess($result);
+                $token = Encryption::encrypt(self::prefix.session_id(), 'E');//加密后的sessionid，用于联合登录
+                Response::outputSuccess($token);
             } else {
                 throw new OPException(OPException::ERR_USER_LOGIN_ERROR);
             }
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
     
@@ -70,7 +75,8 @@ class LoginController extends Controller
             Response::outputSuccess([]);
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
         
     }
@@ -90,8 +96,8 @@ class LoginController extends Controller
                 throw new OPException(OPException::ERR_NOLOGIN);
             }
         } catch (\Exception $exc) {
-            Yii::error($exc->getMessage());
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 
@@ -105,9 +111,42 @@ class LoginController extends Controller
             $captcha->doimg();
             Yii::$app->end();
         } catch (OPException $exc) {
-            
             Yii::error($exc->getMessage());
-            OPResponse::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
+        }
+    }
+    
+    /**
+     * 
+     * 联合登录
+     */
+    public function actionSsoLogin() {
+        try {
+            $token = Yii::$app->getRequest()->get('token');
+            $dString = Encryption::encrypt($token, 'D'); //解密sessionid
+            if(strpos($dString,self::prefix) === 0){
+                $dString = str_replace(self::prefix,'',$dString);
+            }else{
+                throw new \Exception('Parameter error');
+            }
+            
+            $cookies = Yii::$app->response->cookies;
+            $sessionName = Yii::$app->params['sessionName'];
+            if (!empty($sessionName)) {
+                $name = $sessionName;
+            } else {
+                $name = session_name();
+            }
+            $cookies->add(new \yii\web\Cookie([
+                'name' => $name,
+                'value' => $dString,
+                'httpOnly' => true
+            ]));
+            Yii::$app->end();
+        } catch (OPException $exc) {
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
     }
 }

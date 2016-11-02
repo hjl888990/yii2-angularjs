@@ -16,19 +16,28 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logVars' => ['_GET', '_POST', '_FILES'],
+                    'logFile' => '@app/runtime/logs/error.log',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'logVars' => ['_GET', '_POST', '_FILES'],
+                    'logFile' => '@app/runtime/logs/access.log',
                 ],
             ],
         ],
-        'beanstalk'=>[
-            'class' => 'udokmeci\yii2beanstalk\Beanstalk',
-            'host'=> "192.168.95.128", // default host
-            'port'=>11301, //default port
-            'connectTimeout'=> 1,
-            'sleep' => false, // or int for usleep after every job 
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => '172.21.107.71',
+            'port' => 7000,
+            'database' => 0,
+           // 'dataTimeout' => 1,
         ],
         'db' => $db,
     ],

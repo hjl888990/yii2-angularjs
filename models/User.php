@@ -7,7 +7,7 @@ use yii\base\Model;
 use yii\data\Pagination;
 use app\models\entity\UserForm;
 use app\models\common\Func;
-use services\RedisService;
+use app\services\RedisService;
 use app\models\exception\OPException;
 
 /**
@@ -140,18 +140,30 @@ class User extends Model {
      * 创建
      */
     public function createUser($params) {
+        $result = false;
         $userForm = new UserForm();
         $userForm->scenario = 'add';
         $userForm->setAttributes($params);
         if ($userForm->validate()) {//验证输入
-            $result = $userForm->save();
+            if (UserForm::openRedis) {
+                $userForm->beforeSave();
+                $data = $userForm->attributes;
+                $redisModel = new RedisService();
+                $result = $redisModel->hSet(UserForm::userCreateHashCacheDetail, $data['account'], json_encode($data, JSON_UNESCAPED_UNICODE));
+                if (!$result) {
+                    throw new \Exception('用户创建失败');
+                }
+                $result = $redisModel->setAdd(UserForm::userCreateSetCacheKeys, $data['account']);
+            } else {
+                $result = $userForm->save();
+            }
             if (!$result) {
                 throw new \Exception('用户创建失败');
             }
-            return $result;
         } else {
             throw new \Exception($userForm->getFirstError());
         }
+        return $result;
     }
 
     /**
