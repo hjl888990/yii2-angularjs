@@ -29,11 +29,23 @@ class SiteController extends Controller {
         ),
     );
     
+    /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ]
+        ];
+    }
+    
     public function behaviors() {
         return [
             'access' => [
                 'class' => 'app\models\filters\AccessFilter',
-                'except' => [''],
+                'except' => ['error'],
             ],
         ];
     }

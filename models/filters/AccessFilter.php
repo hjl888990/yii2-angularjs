@@ -24,7 +24,8 @@ class AccessFilter extends ActionFilter{
                 return parent::beforeAction($action);
             }
         } catch (\Exception $exc) {
-            Response::outputFailed($exc->getCode(), $exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
         }
         
     }

@@ -26,12 +26,22 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        //发邮件
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.163.com', //每种邮箱的host配置不一样
+                'username' => '13627009379@163.com',//邮件后台开启 POP3/SMTP服务
+                'password' => 'hjl888990',//授权码
+                'port' => '25',
+                'encryption' => 'tls',
+            ],
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => ['13627009379@163.com' => 'admin']
+            ],
         ],
         'urlManager' => [
             //这个baseUrl 最终也会决定homeUrl的去处相当于给当前应用指定一个域名然后真个应用的                                路由都基于这个域名跳转
@@ -62,7 +72,15 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
+                    'categories'=>['test*'],
+                    'logVars' => ['_GET', '_POST', '_FILES'],
+                    'logFile' => '@app/runtime/logs/test.log',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'except'=>['test*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/error.log',
                 ],
@@ -71,7 +89,8 @@ $config = [
                     'levels' => ['info'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/access.log',
-                ],
+                ]
+                
             ],
         ],
         'db' => $db,
@@ -79,7 +98,7 @@ $config = [
     'params' => $params,
 ];
 
-if (YII_ENV_DEV) {
+if (YII_ENV_DEV && YII_DEBUG) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [

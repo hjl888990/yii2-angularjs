@@ -22,7 +22,7 @@ class UserController extends Controller {
         return [
             'access' => [
                 'class' => 'app\models\filters\AccessFilter',
-                'except' => ['test'],
+                'except' => ['test','test-send-email'],
             ],
         ];
     }
@@ -202,6 +202,23 @@ class UserController extends Controller {
             } else {
                 throw new OPException(OPException::ERR_SYS_ERROR);
             }
+        } catch (\Exception $exc) {
+            Yii::error($exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
+        }
+    }
+    
+    public function actionTestSendEmail() {
+        try {
+            $mail = Yii::$app->mailer->compose();
+            $mail->setTo('1195601363@qq.com');
+            $mail->setSubject("邮件测试");
+            $mail->setHtmlBody("<br>问我我我我我");    //发布可以带html标签的文本
+            if ($mail->send())
+                echo "success";
+            else
+                throw new OPException(OPException::ERR_SYS_ERROR);
         } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
             $response = new Response($exc->getCode(), $exc->getMessage());

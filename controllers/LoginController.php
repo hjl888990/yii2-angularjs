@@ -9,6 +9,7 @@ use app\models\factoryCode;
 use app\models\exception\OPException;
 use app\models\common\Response;
 use app\models\common\Encryption;
+use yii\web\Session;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -110,7 +111,7 @@ class LoginController extends Controller
             $captcha = factoryCode::createObj(1);
             $captcha->doimg();
             Yii::$app->end();
-        } catch (OPException $exc) {
+        } catch (\Exception $exc) {
             Yii::error($exc->getMessage());
             $response = new Response($exc->getCode(), $exc->getMessage());
             $response->outputFailed();
@@ -138,13 +139,19 @@ class LoginController extends Controller
             } else {
                 $name = session_name();
             }
-            $cookies->add(new \yii\web\Cookie([
-                'name' => $name,
-                'value' => $dString,
-                'httpOnly' => true
-            ]));
+            $sessionModel = new Session();
+            $data = $sessionModel->getCookieParams();
+            extract($data);
+            if (isset($lifetime, $path, $domain, $secure, $httponly)) {
+                setcookie($name ,$dString, $lifetime, $path, $domain, $secure, $httponly);
+            }
+//            $cookies->add(new \yii\web\Cookie([
+//                'name' => ,
+//                'value' => ,
+//                'httpOnly' => true
+//            ]));
             Yii::$app->end();
-        } catch (OPException $exc) {
+        } catch (\Exception $exc) {
             $response = new Response($exc->getCode(), $exc->getMessage());
             $response->outputFailed();
         }
