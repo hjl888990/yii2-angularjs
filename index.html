@@ -1,60 +1,91 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Knowledge Mgt</title>
+        <title>knowledge Mgt</title>
         <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
         <link rel="stylesheet" href="statics/css/bootstrap.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/animate.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/font-awesome.min.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/simple-line-icons.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/font.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/app.css" type="text/css" />
-        <link rel="stylesheet" href="statics/css/crm.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/easydialog.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/default.css" type="text/css" />
+        <link rel="stylesheet" href="statics/css/crm.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/tip-yellow.css" type="text/css" />
         <link rel="stylesheet" href="statics/css/angular-ui-switch.css" type="text/css" />
-        
     </head>
     <body ng-controller="AppCtrl">
-        
         <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded}" ui-view></div>
-        <!-- jQuery -->
+
         <script src="statics/js/jquery/jquery.min.js"></script>
-        <script src="statics/js/jquery/slimscroll/jquery.slimscroll.min.js"></script>
-        <script src="statics/js/jquery/easydialog.js"></script>
-        <script src="statics/js/jquery/imgShowBtS.js"></script>
-        
+        <script src="statics/js/jquery/lab.js"></script>
+        <script>
+            $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                if ( options.dataType == 'script' || originalOptions.dataType == 'script' ) {
+                    options.cache = true;
+                }
+            });
 
-        <!-- Angular -->
-        <script src="statics/js/angular/angular.min.js"></script>
-        <script src="statics/js/angular/angular-cookies.min.js"></script>
-        <script src="statics/js/angular/angular-file-upload.js"></script>
-        <script src="statics/js/angular/angular-animate.min.js"></script>
-        <script src="statics/js/angular/angular-ui-router.min.js"></script>
-        <script src="statics/js/angular/angular-translate.js"></script>
-        <script src="statics/js/angular/ngStorage.min.js"></script>
-        <script src="statics/js/angular/ui-load.js"></script>
-        <script src="statics/js/angular/ui-jq.js"></script>
-        <script src="statics/js/angular/ui-validate.js"></script>
-        <script src="statics/js/angular/ui-bootstrap-tpls.min.js"></script>
-        <script src="statics/js/angular/angular-ui-switch.min.js"></script>
-        <script src="statics/js/angular/datetime-picker.js"></script>
-        
+            // 基本配置
+            window.baseConfig = {
+                //document标题
+                documentTitle: 'OnePlus knowledge',
+                //项目标题
+                title: 'OnePlus knowledge',
+                //框架路径
+                commonDir: 'statics',
+                //本项目路径
+                currentDir: 'statics',
+                //不缓存的host关键字
+                noCacheHostArr: [
+                    'localhost',
+                    '127',
+                    'devel',
+                    'hjl',
+                    'test',
+                ],
+                //版本号
+                version: '20161108'
+            };
+            window.UEDITOR_HOME_URL = 'statics/js/ueditor/';
 
-        <!-- App -->
-        <script src="statics/js/app.js"></script>
-        <script src="statics/js/appRoute.js"></script>
-        <script src="statics/js/services.js"></script>
-        <script src="statics/js/controllers/controllers.js"></script>
-        <script src="statics/js/filters.js"></script>
-        <script src="statics/js/directives.js"></script>
-        
-        <!-- 自定义Controller -->
-        <script src="statics/js/controllers/loginController.js"></script>
-        <script src="statics/js/controllers/headerController.js"></script>
+            //公共函数
+            function isIndexOf(host) {
+                var res = false;
+                $.each(window.baseConfig.noCacheHostArr, function(k, v) {
+                    if (host.indexOf(v) != -1) {
+                        res = true;
+                    }
+                });
+
+                return res;
+            }
+
+            function addVersion (url) {
+                var _baseConfig = window.baseConfig || {};
+
+                if (isIndexOf(window.location.host)) {
+                    if (url.indexOf('?') != -1) {
+                        url += '&v=' + Math.random();
+                    } else {
+                        url += '?v=' + Math.random();
+                    }
+                } else {
+                    if (url.indexOf('?') != -1) {
+                        url += '&v=' + (_baseConfig && _baseConfig.version) || '';
+                    } else {
+                        url += '?v=' + (_baseConfig && _baseConfig.version) || '';
+                    }
+                }
+
+                return url;
+            }
+
+            $('body').append('<script src="'+ baseConfig.currentDir +'\/js\/loading.js?v='+ baseConfig.version +'"><\/script>');
+        </script>
     </body>
-
 </html>

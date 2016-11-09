@@ -1,6 +1,6 @@
 <div class="panel panel-default" id="createUserId" style="display:none">
     <div class="panel-body">
-        <form class="form-validation form-inline ng-pristine ng-valid" name="addForm">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="addForms">
             <div class="panel b-a">
                 <div class="wrapper-xs bg-success no-border">          
                 </div>
@@ -49,6 +49,17 @@
                     <li class="list-group-item  padding-right-50">
                         <label class="base-search-label ng-scope">
                             <span class="ng-binding fixed-width-span ">
+                                确认密码
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="password" name="confirm_password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="userCreateForm.confirm_password" required>   
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
                                 年龄
                             </span>
                             <span class="ng-scope">
@@ -92,7 +103,7 @@
                     </li>
                 </ul>
                 <div class="panel-footer text-center">
-                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="addForm.$invalid"  type="submit" ng-click="creatUser()" >添加</button>
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="addForms.$invalid"  type="submit" ng-click="creatUser()" >添加</button>
                     <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
                 </div>
             </div>
@@ -187,7 +198,7 @@
 
 <div class="panel panel-default" id="updateUserId" style="display:none">
     <div class="panel-body">
-        <form class="form-validation form-inline ng-pristine ng-valid" name="updateForm">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="updateForms">
             <div class="panel b-a">
                 <div class="wrapper-xs bg-success no-border">          
                 </div>
@@ -220,17 +231,6 @@
                                 ：
                             </span>
                             <input type="text" name="name" ng-trim="true" ng-minlength="1"  ng-maxlength="10" class="form-control  base-search-input"  ng-model="userUpdateForm.name" required>
-                        </label>
-                    </li>
-                    <li class="list-group-item  padding-right-50">
-                        <label class="base-search-label ng-scope">
-                            <span class="ng-binding fixed-width-span ">
-                                密码
-                            </span>
-                            <span class="ng-scope">
-                                ：
-                            </span>
-                            <input type="password" name="password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="userUpdateForm.password" required>   
                         </label>
                     </li>
                     <li class="list-group-item  padding-right-50">
@@ -279,7 +279,53 @@
                     </li>
                 </ul>
                 <div class="panel-footer text-center">
-                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="updateForm.$invalid"  type="submit" ng-click="updateUser()" >更新</button>
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="updateForms.$invalid"  type="submit" ng-click="updateUser()" >更新</button>
+                    <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="panel panel-default" id="changePwdId" style="display:none">
+    <div class="panel-body">
+        <form class="form-validation form-inline ng-pristine ng-valid" name="changePwdForms">
+            <div class="panel b-a">
+                <div class="wrapper-xs bg-success no-border">          
+                </div>
+                <div class="wrapper text-center">
+                    <h2 class="text-u-c m-b-none" style="margin-top: 0px;">修改用户密码</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item padding-right-50" ng-show="changePwdReturnMessage != ''" style="text-align: center;">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding colorRed" ng-bind="changePwdReturnMessage"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                密码
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="password" name="password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="changePwdForm.password" required>   
+                        </label>
+                    </li>
+                    <li class="list-group-item  padding-right-50">
+                        <label class="base-search-label ng-scope">
+                            <span class="ng-binding fixed-width-span ">
+                                确认密码
+                            </span>
+                            <span class="ng-scope">
+                                ：
+                            </span>
+                            <input type="password" name="confirm_password" ng-trim="true" ng-minlength="6"  ng-maxlength="20"  class="form-control  base-search-input"  ng-model="changePwdForm.confirm_password" required>   
+                        </label>
+                    </li>
+                </ul>
+                <div class="panel-footer text-center">
+                    <button class="btn m-b-xs w-xs btn-info" ng-disabled="changePwdForms.$invalid"  type="submit" ng-click="changePwdDo()" >更新</button>
                     <button class="btn m-b-xs w-xs btn-danger" type="button" ng-click="closeEasyDialog()" >取消</button>
                 </div>
             </div>

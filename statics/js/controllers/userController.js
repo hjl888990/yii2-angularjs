@@ -2,11 +2,13 @@
 /* collect Controllers */
 app.controller('userListController', function($scope, $http, $filter, tipDialog) {
     $scope.queryParams = {account:'',name: '', email: '', sex: '', startTime: '', endTime: '',currentPage:1};
-    $scope.userCreateForm = {account:'',name: '', password: '', email: '', age: '', sex: '', phone: ''};
+    $scope.userCreateForm = {account:'',name: '', password: '',confirm_password:'', email: '', age: '', sex: '', phone: ''};
     $scope.userDetail = {account:'',name: '', password: '', email: '', age: '', sex: '', phone: ''};
     $scope.userUpdateForm = {account:'',name: '', email: '', age: '', sex: '', phone: ''};
+    $scope.changePwdForm = {id:'',password: '',confirm_password:''};
     $scope.createReturnMessage = '';
     $scope.updateReturnMessage = '';
+    $scope.changePwdReturnMessage = '';
     $scope.sexOptions = [{id: 1, name: '男'}, {id: 2, name: '女'}];
     var tipDialogTimeOut = 2000;
 
@@ -75,7 +77,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
      * @returns {undefined}
      */
     $scope.add = function() {
-        $scope.userCreateForm = {name: '', password: '', email: '', age: '', sex: '', phone: ''};
+        $scope.userCreateForm = {name: '', password: '',confirm_password:'', email: '', age: '', sex: '', phone: ''};
         easyDialog.open({
             container: 'createUserId', //弹窗元素id
             // autoClose:10000,//自动关闭
@@ -88,10 +90,13 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
      * @returns {Boolean}
      */
     $scope.closeEasyDialog = function() {
-        $scope.userCreateForm = {name: '', password: '', email: '', age: '', sex: '', phone: ''};
+        $scope.userCreateForm = {name: '', password: '',confirm_password:'', email: '', age: '', sex: '', phone: ''};
         $scope.userDetail = {name: '', password: '', email: '', age: '', sex: '', phone: ''};
-        $scope.userUpdateForm = {name: '', password: '', email: '', age: '', sex: '', phone: ''};
-        $scope.createReturnMessage = {name: '', password: '', email: '', age: '', sex: '', phone: ''};
+        $scope.userUpdateForm = {name: '',  email: '', age: '', sex: '', phone: ''};
+        $scope.changePwdForm = {id:'',password: '',confirm_password:''};
+        $scope.createReturnMessage = '';
+        $scope.updateReturnMessage = '';
+        $scope.changePwdReturnMessage = '';
         easyDialog.close();
         return true;
     }
@@ -130,7 +135,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
         var params = {
             id: id
         };
-        $scope.userUpdateForm = {name: '', password: '', email: '', age: '', sex: '', phone: ''};
+        $scope.userUpdateForm = {name: '',  email: '', age: '', sex: '', phone: ''};
         $http.get('/index.php?r=user/detail', {params: params}).success(function(res) {
             if (res.ret == true) {
                 $scope.userUpdateForm = res.data;
@@ -188,7 +193,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
             }
         });
     }
-     /**
+    /**
      * 删除用户
      * @returns {undefined}
      */
@@ -199,6 +204,43 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
                 $scope.load();
             } else {
                 tipDialog.open({title: '提示信息', template: res.errMsg, isOk: true, timeOut: tipDialogTimeOut});
+            }
+        });
+    }
+    
+    /**
+     * 修改用户密码
+     * @param {type} name
+     * @returns {undefined}
+     */
+    $scope.changePwd = function(id) {
+        $scope.changePwdForm = {id:id,password: '',confirm_password:''};
+        easyDialog.open({
+            container: 'changePwdId', //弹窗元素id
+            // autoClose:10000,//自动关闭
+            fixed: false,
+        });
+    }
+    /**
+     * 修改用户密码
+     * @returns {undefined}
+     */
+    $scope.changePwdDo = function() {
+        var param = {
+            user: $scope.changePwdForm
+        };
+        $http.post('/index.php?r=user/change-pwd', param).success(function(res) {
+            if (res.ret == 1) {
+                $scope.load();
+                $scope.closeEasyDialog();
+                tipDialog.open({title: '提示信息', template: 'Successfuly', isOk: true, timeOut: tipDialogTimeOut});
+            } else {
+                if (res.ret === 0) {
+                    $scope.changePwdReturnMessage = res.errMsg;
+                } else {
+                    easyDialog.close();
+                    tipDialog.open({title: '提示信息', template: res.errMsg, isOk: true, timeOut: tipDialogTimeOut});
+                }
             }
         });
     }

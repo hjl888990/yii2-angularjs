@@ -50,7 +50,8 @@ class LoginController extends Controller
             
             //登录
             $model = new User();
-            if ($result = $model->login($params)) {
+            $result = $model->login($params);
+            if ($result) {
                 $token = Encryption::encrypt(self::prefix.session_id(), 'E');//加密后的sessionid，用于联合登录
                 Response::outputSuccess($token);
             } else {

@@ -253,7 +253,6 @@ ul.noleft { padding-left: 0; }
       padding-bottom: 20px;
 }
 .talk_to_ico, .dingyue_ico_submit, .shoucang_ico_submit, .userfull_ico_submit, .total_ico_submit {
-    //background: rgba(0, 0, 0, 0) url("../img/bgv3.gif") no-repeat scroll left top;
     height: 25px;
     padding-left: 28px;
 }
@@ -397,9 +396,7 @@ margin-left:-40px;
 }
 
 .rma-detail-td{
-    //padding-right: 50px;
     text-align: left;
-  //  width: 50%;
 }
 .font-success{
     color:green;
@@ -411,14 +408,10 @@ margin-left:-40px;
     color:blue;
 }
 
-.rma-detail-tdspan{
-   // width:200px;
-}
 
 .rma-detail-table{
     width: 80%;
     line-height: 30px;    
-    //margin-left: 20px;
 }
 
 .rma-detail-table table{
@@ -440,7 +433,6 @@ margin-left:-40px;
 .rma-detail-table table td,.table th {  
     border-bottom: none;
     border-left: none;
-   // border-right: 1px solid #dddddd;
     border-top: 1px solid #DDD;
     padding: 2px 3px 3px 4px
 }
@@ -449,9 +441,7 @@ margin-left:-40px;
     border-left: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
-thead.fixedThead tr th:last-child {
-   // color:#dddddd; 
-}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none !important;

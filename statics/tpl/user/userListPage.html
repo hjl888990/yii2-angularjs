@@ -26,6 +26,7 @@
             <td>{{user.update_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
             <td><i class="fa fa-gear text-info rpactive iconsClass" ng-click="update(user.id);"></i>
                 <i class="fa fa-times text-danger text rpactive iconsClass" ng-click="deleteUser(user.id);"></i>
+                <i class="fa fa-envelope rpactive" ng-click="changePwd(user.id);"></i>
             </td>
           </tr>
           <!-- 查询无数据 -->

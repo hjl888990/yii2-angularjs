@@ -126,10 +126,11 @@ class User extends Model {
      * 详情查询
      */
     public function searchUserDetail($searchParams) {
-            $userForm = UserForm::find()->addSelect('account,age,create_time,email,id,name,phone,sex')->andWhere($searchParams)->limit(1)->one();
+            $user = UserForm::find()->addSelect('account,age,create_time,email,id,name,phone,sex')->andWhere($searchParams)->limit(1)->one();
             $result = '';
-            if (!empty($userForm)) {
-                $result = $userForm->attributes;
+            if (!empty($user)) {
+                $result = $user->attributes;
+                unset($result['password']);
             }else{
                 throw new OPException(OPException::ERR_USER_NOT_EXIST);
             }
@@ -140,13 +141,14 @@ class User extends Model {
      * 创建
      */
     public function createUser($params) {
+        
         $result = false;
         $userForm = new UserForm();
         $userForm->scenario = 'add';
         $userForm->setAttributes($params);
         if ($userForm->validate()) {//验证输入
             if (UserForm::openRedis) {
-                $userForm->beforeSave();
+                $userForm->beforeSave(true);
                 $data = $userForm->attributes;
                 $redisModel = new RedisService();
                 $result = $redisModel->hSet(UserForm::userCreateHashCacheDetail, $data['account'], json_encode($data, JSON_UNESCAPED_UNICODE));
@@ -171,6 +173,7 @@ class User extends Model {
      */
     public function updateUser($params) {
         $user = UserForm::findOne((int) $params['id']);
+        
         if (empty($user)) {
             throw new OPException(OPException::ERR_USER_NOT_EXIST);
         } else {
@@ -182,6 +185,31 @@ class User extends Model {
                     return true;
                 } else {
                     throw new \Exception('更新用户信息失败');
+                }
+            } else {
+                throw new \Exception($user->getFirstError());
+            }
+        }
+    }
+    
+    /**
+     * 更新
+     */
+    public function changeUserPwd($params) {
+        $user = UserForm::findOne((int) $params['id']);
+        
+        if (empty($user)) {
+            throw new OPException(OPException::ERR_USER_NOT_EXIST);
+        } else {
+            $user->scenario = 'changePwd';
+            $user->setAttributes($params);
+            if ($user->validate()) {//验证输入
+                $user->beforeChangePwd();
+                $result = $user->save();
+                if ($result == 1) {
+                    return true;
+                } else {
+                    throw new \Exception('用户密码修改失败');
                 }
             } else {
                 throw new \Exception($user->getFirstError());

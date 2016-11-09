@@ -153,7 +153,6 @@ a:hover .caret-white {
 }
 .form-control:focus {
   border-color: #23b7e5;
-  //border-color: red;
 }
 .form-control-spin {
   position: absolute;
@@ -334,7 +333,6 @@ a.list-group-item:focus {
   border-radius: 2px 2px 0 0;
 }
 .panel-default .panel-heading {
-  //background-color: #f6f8f8;
   background-color:rgb(255, 255, 255);
 }
 .panel-heading.no-border {
@@ -3861,9 +3859,7 @@ a.text-black:hover {
   -moz-animation: movingbar 0.75s infinite;
   animation: movingbar 0.75s infinite;
 }
- .table-striped thead th{
-   // background: #eaf0f7 none repeat scroll 0 0; 
-}
+
 
 
 @-webkit-keyframes movingbar {

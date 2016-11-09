@@ -178,6 +178,36 @@ class UserController extends Controller {
         }
     }
     
+    /**
+     * Updates an existing Country model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionChangePwd() {
+        try {
+            $request = Yii::$app->getRequest()->post('user');
+            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE));
+            $user = json_decode($request, true);
+
+            if (!isset($user['id']) || empty($user['id'])) {
+                throw new OPException(OPException::ERR_SYS_PARAM_ERROR);
+            }
+            $userModel = new User();
+            $result = $userModel->changeUserPwd($user);
+            if ($result) {
+                Response::outputSuccess($result);
+            } else {
+                throw new OPException(OPException::ERR_SYS_ERROR);
+            }
+        } catch (\Exception $exc) {
+            Yii::error($exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
+        }
+    }
+    
+    
 
     public function actionTest() {
         try {
@@ -189,6 +219,7 @@ class UserController extends Controller {
             $user = [
                 "name"=>"dasda",
                 "password"=>"231312",
+                "confirm_password"=>"231312",
                 "email"=>$account."@qq.com",
                 "age"=>"12",
                 "sex"=>"1",

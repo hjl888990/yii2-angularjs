@@ -5441,7 +5441,6 @@ button.close {
 }
 .modal-header {
   min-height: 16.42857143px;
-  //padding: 15px;
   padding-bottom: 5px;
   padding-left: 15px;
   padding-top: 5px;
@@ -5460,7 +5459,6 @@ button.close {
   padding: 15px;
 }
 .modal-footer {
-  //padding: 15px;
   padding-right: 10px;
   padding-bottom: 5px;
   padding-left: 15px;
