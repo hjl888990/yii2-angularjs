@@ -73,14 +73,14 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error'],
-                    'categories'=>['test*'],
+                    'categories'=>['shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
-                    'logFile' => '@app/runtime/logs/test.log',
+                    'logFile' => '@app/runtime/logs/shell.log',
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
-                    'except'=>['test*'],
+                    'except'=>['shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/error.log',
                 ],

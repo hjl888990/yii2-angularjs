@@ -6,9 +6,11 @@ use Yii;
 use yii\web\Controller;
 use app\models\Filters;
 use app\models\User;
+use app\models\entity\UserForm;
 use app\models\exception\OPException;
 use app\models\common\Response;
 use app\services\RedisService;
+
 
 /**
  * CountryController implements the CRUD actions for Country model.
@@ -196,6 +198,9 @@ class UserController extends Controller {
             $userModel = new User();
             $result = $userModel->changeUserPwd($user);
             if ($result) {
+                if(UserForm::changePwdSendEmail){//发送邮件
+                    $userModel->sendChangePwdEmail($user);
+                }
                 Response::outputSuccess($result);
             } else {
                 throw new OPException(OPException::ERR_SYS_ERROR);
@@ -210,6 +215,12 @@ class UserController extends Controller {
     
 
     public function actionTest() {
+        $r = new RedisService();
+        $account = $r->get('a');
+        $account = $account +1;
+        $r->set('a',$account);
+        var_dump($account);exit;
+        
         try {
             $r = new RedisService();
             $account = $r->incr('account');
@@ -240,21 +251,18 @@ class UserController extends Controller {
         }
     }
     
-    public function actionTestSendEmail() {
-        try {
-            $mail = Yii::$app->mailer->compose();
-            $mail->setTo('1195601363@qq.com');
-            $mail->setSubject("邮件测试");
-            $mail->setHtmlBody("<br>问我我我我我");    //发布可以带html标签的文本
-            if ($mail->send())
-                echo "success";
-            else
-                throw new OPException(OPException::ERR_SYS_ERROR);
-        } catch (\Exception $exc) {
-            Yii::error($exc->getMessage());
-            $response = new Response($exc->getCode(), $exc->getMessage());
-            $response->outputFailed();
-        }
+    public function actionTestSwoole() {
+        $serv = new swoole_server("0.0.0.0", 9501);
+        $serv->on('connect', function ($serv, $fd) {
+            echo "Client:Connect.\n";
+        });
+        $serv->on('receive', function ($serv, $fd, $from_id, $data) {
+            $serv->send($fd, 'Swoole: ' . $data);
+        });
+        $serv->on('close', function ($serv, $fd) {
+            echo "Client: Close.\n";
+        });
+        $serv->start();
     }
 
     /**

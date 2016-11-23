@@ -13,6 +13,21 @@ return [
     'schemaCacheDuration' => 3600,
     // Name of the cache component used to store schema information
     'schemaCache' => 'cache',
+    'attributes' => [
+        // use a smaller connection timeout
+        PDO::ATTR_TIMEOUT => 10,
+    ],
+//    'masters' => [
+//        ['dsn' => 'mysql:host=172.21.107.208;dbname=hjl'],
+//    ],
+//    'masterConfig' =>[
+//        'username' => 'root',   
+//        'password' => '',
+//        'attributes' => [
+//            // use a smaller connection timeout
+//            PDO::ATTR_TIMEOUT => 10,
+//        ],
+//    ],
     // 配置从服务器
     'slaveConfig' => [
         'username' => 'root',   

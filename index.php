@@ -1,5 +1,4 @@
 <?php
-
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -27,7 +26,7 @@ if (YII_DEBUG) {
 
 
 
-$config = require(__DIR__ . '/config/main.php');
+$config = require(__DIR__ . '/config/web.php');
 
 $WebApplicationnew= new yii\web\Application($config);
 $WebApplicationnew->run();

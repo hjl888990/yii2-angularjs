@@ -10,12 +10,13 @@ namespace app\models\entity;
 class UserForm extends \yii\db\ActiveRecord {
 
     const openRedis = true; //是否开启redis缓存
+    const changePwdSendEmail = true; //修改密码是否发送邮件
     const openRedisTimeOut = 864000; //redis缓存有效期
     const userCreateSetCacheKeys = 'user_create_do';
     const userCreateSetCacheKeysRedo = 'user_create_redo';
     const userCreateHashCacheDetail = 'user_create_detail';
     const userCreateHashCacheLock = 'user_create_lock';
-
+    
     private $id; //自增主键
     private $account; //账号
     private $name; //用户名
@@ -28,93 +29,25 @@ class UserForm extends \yii\db\ActiveRecord {
     private $create_time; //创建时间
     private $update_time; //更新时间
 
-    public function getId() {
-        return $this->id;
+
+    public function getAgeType() {
+        return 'int';
     }
 
-    public function getAccount() {
-        return $this->account;
+    public function getSexType() {
+        return 'int';
     }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getPassword() {
-        return $this->password;
-    }
-
+    
     public function getConfirm_password() {
         return $this->confirm_password;
-    }
-
-    public function getAge() {
-        return $this->age;
-    }
-
-    public function getSex() {
-        return $this->sex;
-    }
-
-    public function getPhone() {
-        return $this->phone;
-    }
-
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function getCreate_time() {
-        return $this->create_time;
-    }
-
-    public function getUpdate_time() {
-        return $this->update_time;
-    }
-
-    public function setId($id) {
-        $this->id = (int) $id;
-    }
-
-    public function setAccount($account) {
-        $this->account = (int) $account;
-    }
-
-    public function setName($name) {
-        $this->name = $name;
-    }
-
-    public function setPassword($password) {
-        $this->password = $password;
     }
 
     public function setConfirm_password($confirm_password) {
         $this->confirm_password = $confirm_password;
     }
 
-    public function setAge($age) {
-        $this->age = (int) $age;
-    }
-
-    public function setSex($sex) {
-        $this->sex = (int) $sex;
-    }
-
-    public function setPhone($phone) {
-        $this->phone = $phone;
-    }
-
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-
-    public function setCreate_time($create_time) {
-        $this->create_time = $create_time;
-    }
-
-    public function setUpdate_time($update_time) {
-        $this->update_time = $update_time;
-    }
+    
+    
 
     public static function tableName() {
         return 'users';
@@ -177,7 +110,7 @@ class UserForm extends \yii\db\ActiveRecord {
         return [
             'add' => ['account', 'name', 'password', 'confirm_password', 'age', 'sex', 'phone', 'email', 'create_time'],
             'update' => ['account', 'name', 'password', 'age', 'sex', 'phone', 'email', 'update_time'],
-            'changePwd' => ['password', 'confirm_password'],
+            'changePwd' => ['password', 'confirm_password', 'update_time'],
             'login' => ['account', 'password'],
         ];
     }

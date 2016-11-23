@@ -75,7 +75,7 @@ class UserController extends Controller {
                 }
             }
         } catch (\Exception $exc) {
-            Yii::error($exc->getMessage());
+            Yii::error($exc->getMessage(),'shell_user');
             echo $exc->getMessage();
         }
     }
@@ -131,7 +131,7 @@ class UserController extends Controller {
                 }
             }
         } catch (\Exception $exc) {
-            Yii::error($exc->getMessage());
+            Yii::error($exc->getMessage(),'shell_user');
             echo $exc->getMessage();
         }
     }
@@ -184,7 +184,7 @@ class UserController extends Controller {
                 }
             }
         } catch (\Exception $exc) {
-            Yii::error($exc->getMessage());
+            Yii::error($exc->getMessage(),'shell_user');
             echo $exc->getMessage();
         }
     }

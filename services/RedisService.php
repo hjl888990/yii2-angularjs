@@ -125,8 +125,9 @@ class RedisService {
         return Yii::$app->redis->executeCommand('EXEC');
     }
 
-    /*     * ***********************Hash操作********************** */
-
+    
+    
+    /*************************Hash操作********************** */
     /**
      * hSet
      * $redis->hSet('hashkey', 'key', 'value');
@@ -241,8 +242,9 @@ class RedisService {
         return Yii::$app->redis->executeCommand('HGETALL', [$hashkey]);
     }
 
-    /*     * ***********************SET操作********************** */
-
+    
+    
+    /** ***********************SET操作********************** */
     /**
      * setAdd
      * $redis->setAdd('setkey','value');
@@ -254,17 +256,17 @@ class RedisService {
     
     /**
      * getScard
-     * $redis->getScard('setkey'');
-     * 返回key为getScard的数量
+     * $redis->sCard('setkey'');
+     * 返回key为$setkey的数量
      */
     public function getScard($setkey) {
         return Yii::$app->redis->executeCommand('SCARD', [$setkey]);
     }
     
     /**
-     * getScard
-     * $redis->getScard('setkey','count');
-     * 返回key为getScard的指定数量的值
+     * getSrandmember
+     * $redis->srandMember('setkey','count');
+     * 返回key为$setkey的指定数量的值
      **/
     public function getSrandmember($setkey,$count = 1) {
         return Yii::$app->redis->executeCommand('SRANDMEMBER', [$setkey,$count]);
@@ -273,11 +275,42 @@ class RedisService {
     /**
      * srem
      * $redis->srem('setkey','value');
-     * 移除key为getScard的值
+     * 移除key=$setkey,value=$value的值
      **/
     public function srem($setkey, $value) {
         return Yii::$app->redis->executeCommand('SREM', [$setkey, $value]);
     }
     
 
+    /** ***********************LIST操作********************** */
+    
+    /**
+     * lPush
+     * $redis->lPush('listKey','value');
+     * 插入一个值到列表左边,如果列表不存在,新建一个列表
+     * 返回当前列表长度
+     **/
+    public function lPush($listKey, $value) {
+        return Yii::$app->redis->executeCommand('LPUSH', [$listKey, $value]);
+    }
+    
+    /**
+     * lLen
+     * $redis->lLen('listKey');
+     * 返回当前列表长度
+     **/
+    public function lLen($listKey) {
+        return Yii::$app->redis->executeCommand('LLEN', [$listKey]);
+    }
+    
+    /**
+     * rPop
+     * $redis->rPop('listKey');
+     * 删除并返回列表的最后一个值
+     **/
+    public function rPop($listKey) {
+        return Yii::$app->redis->executeCommand('RPOP', [$listKey]);
+    }
+    
+    
 }

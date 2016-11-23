@@ -77,6 +77,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
      * @returns {undefined}
      */
     $scope.add = function() {
+        $scope.createReturnMessage = '';
         $scope.userCreateForm = {name: '', password: '',confirm_password:'', email: '', age: '', sex: '', phone: ''};
         easyDialog.open({
             container: 'createUserId', //弹窗元素id
@@ -135,6 +136,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
         var params = {
             id: id
         };
+        $scope.updateReturnMessage = '';
         $scope.userUpdateForm = {name: '',  email: '', age: '', sex: '', phone: ''};
         $http.get('/index.php?r=user/detail', {params: params}).success(function(res) {
             if (res.ret == true) {
@@ -214,6 +216,7 @@ app.controller('userListController', function($scope, $http, $filter, tipDialog)
      * @returns {undefined}
      */
     $scope.changePwd = function(id) {
+        $scope.changePwdReturnMessage = '';
         $scope.changePwdForm = {id:id,password: '',confirm_password:''};
         easyDialog.open({
             container: 'changePwdId', //弹窗元素id

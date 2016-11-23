@@ -20,7 +20,22 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
+                    'categories'=>['shell_*'],
+                    'logVars' => ['_GET', '_POST', '_FILES'],
+                    'logFile' => '@app/runtime/logs/shell.log',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info','error'],
+                    'categories'=>['email'],
+                    'logVars' => ['_GET', '_POST', '_FILES'],
+                    'logFile' => '@app/runtime/logs/email.log',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'except'=>['shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/error.log',
                 ],
@@ -29,7 +44,25 @@ $config = [
                     'levels' => ['info'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/access.log',
-                ],
+                ]
+                
+            ],
+        ],
+        //发邮件
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.163.com', //每种邮箱的host配置不一样
+                'username' => '13627009379@163.com',//邮件后台开启 POP3/SMTP服务
+                'password' => 'hjl888990',//授权码
+                'port' => '25',
+                'encryption' => 'tls',
+            ],
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => ['13627009379@163.com' => 'admin']
             ],
         ],
         'redis' => [

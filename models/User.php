@@ -19,7 +19,7 @@ class User extends Model {
      * ִ执行登录
      */
     public function login($params) {
-        $isLogin = true;
+        $isLogin = false;
         $userForm = new UserForm();
         $userForm->scenario = 'login';
         $userForm->setAttributes($params);
@@ -33,7 +33,7 @@ class User extends Model {
                 Func::setSession($result);
                 $isLogin = true;
             } else {
-                $isLogin = false;
+                throw new OPException(OPException::ERR_USER_LOGIN_ERROR);
             }
         }else{
             throw new \Exception($userForm->getFirstError());
@@ -220,8 +220,8 @@ class User extends Model {
     /**
      * 删除
      */
-    public function deleteUser($params) {
-        $userForm = UserForm::find()->addSelect('id')->andWhere($params)->one();
+    public function deleteUser($id) {
+        $userForm = UserForm::find()->addSelect('id')->andWhere(['id'=>$id])->one();
         if (!empty($userForm)) {
             $delResult = $userForm->delete();
             if ($delResult == 1) {
@@ -233,6 +233,45 @@ class User extends Model {
             throw new OPException(OPException::ERR_USER_NOT_EXIST);
         }
     }
+    
+    
+    /**
+     *$user= array(3) {
+      ["id"]=>string(6) "280308"
+      ["password"]=>string(6) "111111"
+      ["confirm_password"]=>string(6) "111111"
+     * }
+     * 发送变更密码邮件
+     */
+    public function sendChangePwdEmail($user) {
+        $userForm = UserForm::find()->addSelect('id,account,name,email')->andWhere(['id'=>$user['id']])->one();
+        if (!empty($userForm)) {
+            $userMsg = $userForm->attributes;
+            $emailDetail = json_encode(['sendTo' => $userMsg['email'], 'subject' => '密码更新', 'htmlBody' => '您的新密码为：' . $user['password']],JSON_UNESCAPED_UNICODE);
+            $emailDoRedisListKey = Yii::$app->params['emailDoRedisListKey'];
+            $emailDoRedisDetailKey = Yii::$app->params['emailDoRedisDetailKey'];
+            $redis  = new RedisService();
+            $hGetResult = $redis->hGet($emailDoRedisDetailKey, 'changePwd_userId_' . $user['id']);
+            if($hGetResult){
+                throw new \Exception('变更密码太频繁，请稍等!');
+            }  else {
+                $hSetResult = $redis->hSet($emailDoRedisDetailKey, 'changePwd_userId_' . $user['id'], $emailDetail);
+                if ($hSetResult) {
+                    $lpushResult = $redis->lPush($emailDoRedisListKey, 'changePwd_userId_' . $user['id']);
+                    if ($lpushResult) {
+                        return true;
+                    } else {
+                        throw new OPException(OPException::ERR_REDIS_CONNECT_ERROR);
+                    }    
+                } else {
+                    throw new OPException(OPException::ERR_REDIS_CONNECT_ERROR);
+                }
+            }
+        } else {
+            throw new OPException(OPException::ERR_USER_NOT_EXIST);
+        }
+    }
+    
     
     /**
      * 清楚所有缓存
@@ -249,7 +288,7 @@ class User extends Model {
      * @return type
      */
     public function checkUser($searchParams) {
-        $userForm = UserForm::find()->addSelect('account,name,age,create_time,email,id,name,phone,sex')->andWhere($searchParams)->one();
+        $userForm = UserForm::find()->addSelect('id,account,name,age,create_time,email,phone,sex')->andWhere($searchParams)->one();
         $result = '';
         if (!empty($userForm)) {
             $result = $userForm->attributes;

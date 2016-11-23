@@ -27,22 +27,6 @@ var app = angular.module('app', [
 
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
-
-//            $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
-//                if (!$rootScope.isLogin && toState.name != 'access.signin') {
-//                    $http.get('/index.php?r=login/ajax-check-login').success(function(d) {
-//                        if (d.ret == '1') {
-//                            $rootScope.isLogin = true;
-//                            $state.go(toState.name, toParams);
-//                        } else {
-//                            $state.go('access.signin');
-//                        }
-//                    });
-//
-//                } else {
-//                    ;
-//                }
-//            });
         })
 
 
