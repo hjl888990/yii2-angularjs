@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use app\models\Filters;
 use app\models\User;
+use app\models\Swoole;
 use app\models\entity\UserForm;
 use app\models\exception\OPException;
 use app\models\common\Response;
@@ -24,7 +25,7 @@ class UserController extends Controller {
         return [
             'access' => [
                 'class' => 'app\models\filters\AccessFilter',
-                'except' => ['test','test-send-email'],
+                'except' => ['test','test-send-email','test-swoole-service'],
             ],
         ];
     }
@@ -36,10 +37,9 @@ class UserController extends Controller {
     public function actionSearch() {
         try {
             //参数过滤
-            $request = Yii::$app->getRequest()->getParam();
-            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE));
+            $request = Yii::$app->getRequest()->get();
+            $request = Filters::filter(json_encode($request,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
             $request = json_decode($request, true);
-
             $userModel = new User();
             $searchParams = array();
             if (isset($request['account']) && !empty($request['account'])) {
@@ -215,12 +215,6 @@ class UserController extends Controller {
     
 
     public function actionTest() {
-        $r = new RedisService();
-        $account = $r->get('a');
-        $account = $account +1;
-        $r->set('a',$account);
-        var_dump($account);exit;
-        
         try {
             $r = new RedisService();
             $account = $r->incr('account');
@@ -251,19 +245,23 @@ class UserController extends Controller {
         }
     }
     
-    public function actionTestSwoole() {
-        $serv = new swoole_server("0.0.0.0", 9501);
-        $serv->on('connect', function ($serv, $fd) {
-            echo "Client:Connect.\n";
-        });
-        $serv->on('receive', function ($serv, $fd, $from_id, $data) {
-            $serv->send($fd, 'Swoole: ' . $data);
-        });
-        $serv->on('close', function ($serv, $fd) {
-            echo "Client: Close.\n";
-        });
-        $serv->start();
+    public function actionTestSwooleService() {
+        try {
+            $command = 'addUser';
+            $swooleModel = new Swoole();
+            $result = $swooleModel->syncAddTask($command);
+            if ($result['ret'] == 1) {
+                Response::outputSuccess($result['content']);
+            } else {
+                throw new \Exception($result['content']);
+            }
+        } catch (\Exception $exc) {
+            Yii::error($exc->getMessage());
+            $response = new Response($exc->getCode(), $exc->getMessage());
+            $response->outputFailed();
+        }
     }
+
 
     /**
      * 清楚缓存

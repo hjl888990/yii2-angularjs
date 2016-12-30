@@ -1,9 +1,10 @@
 <?php
-
+$env = require(__DIR__ . '/env.php');
 return [
-    'adminEmail' => 'admin@example.com',
-    'sessionName'=>'hjlYII',
+    'sessionName' => 'hjlYII',
     'emailDoRedisListKey' => 'email_list_do',
     'emailReDoRedisListKey' => 'email_list_redo',
     'emailDoRedisDetailKey' => 'email_detail_do',
+    'swoole_http_service_host' => $env['swoole_http_service_host'],
+    'webSiteUrl' => $env['webSiteUrl'],
 ];

@@ -9,7 +9,7 @@ namespace app\models\entity;
  */
 class UserForm extends \yii\db\ActiveRecord {
 
-    const openRedis = true; //是否开启redis缓存
+    const openRedis = false; //是否开启redis缓存
     const changePwdSendEmail = true; //修改密码是否发送邮件
     const openRedisTimeOut = 864000; //redis缓存有效期
     const userCreateSetCacheKeys = 'user_create_do';

@@ -125,7 +125,8 @@ class UserController extends Controller {
                                     $r->srem(UserForm::userCreateSetCacheKeys, $account);
                                 }
                             }
-                            $r->hDel(UserForm::userCreateHashCacheLock, $account); //解锁    
+                            $r->hDel(UserForm::userCreateHashCacheLock, $account); //解锁
+                            Yii::info('add user ' . $accountDetailArr['account'] . ' success!', 'shell_user');
                         }
                     }
                 }

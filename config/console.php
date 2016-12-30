@@ -20,7 +20,7 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error'],
+                    'levels' => ['error','info'],
                     'categories'=>['shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/shell.log',
@@ -34,14 +34,22 @@ $config = [
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
+                    'levels' => ['info','error'],
+                    'categories'=>['swoole_service'],
+                    'logVars' => ['_GET', '_POST', '_FILES'],
+                    'logFile' => '@app/runtime/logs/swoole_service.log',
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
-                    'except'=>['shell_*'],
+                    'except'=>['shell_*','email','swoole_service'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/error.log',
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['info'],
+                    'except'=>['shell_*','email','swoole_service'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/access.log',
                 ]
