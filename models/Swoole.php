@@ -18,11 +18,11 @@ class Swoole extends Model {
     /**
      * 添加异步执行任务
      */
-    public function syncAddTask($command) {
-        $commands = ['command' => $command, 'params' => []];
+    public function syncAddTask($command,$params = []) {
+        $commands = ['command' => $command, 'params' => $params];
         $commands = json_encode($commands);
         $host = Yii::$app->params['webSiteUrl'];
-        $url = $host . '/swoole?command=' . base64_encode($commands) . '&token=W5lZWRjYWNoZWZpbGU';
+        $url = $host . '/swoole?command=' . base64_encode($commands);
         $url = str_replace('https://', 'http://', $url);
         $res = $this->getCurl($url);
         return $res;

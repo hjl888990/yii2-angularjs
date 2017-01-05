@@ -41,6 +41,5 @@ return [
     // 配置从服务器组
     'slaves' => [
         ['dsn' => 'mysql:host=172.21.104.1;dbname=hjl_slaves'],
-        ['dsn' => 'mysql:host=172.21.104.1;dbname=hjl_slaves2'],
     ],
 ];

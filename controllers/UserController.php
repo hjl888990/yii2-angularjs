@@ -248,8 +248,23 @@ class UserController extends Controller {
     public function actionTestSwooleService() {
         try {
             $command = 'addUser';
+            $r = new RedisService();
+            $account = $r->incr('account');
+            if ($account === false) {
+                throw new \Exception('get account error.');
+            }
+            $user = [
+                "name" => "dasda",
+                "password" => "231312",
+                "confirm_password" => "231312",
+                "email" => $account . "@qq.com",
+                "age" => "12",
+                "sex" => "1",
+                "phone" => "13627009379",
+                "account" => $account
+            ];
             $swooleModel = new Swoole();
-            $result = $swooleModel->syncAddTask($command);
+            $result = $swooleModel->syncAddTask($command,$user);
             if ($result['ret'] == 1) {
                 Response::outputSuccess($result['content']);
             } else {

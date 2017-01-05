@@ -7,6 +7,6 @@
  */
 return [
     'webSiteUrl'=>'http://hjl.yii.cn/',
-    'swoole_http_service_host' => ['ip' => '172.21.107.77', 'port' => 8002],
+    'swoole_service_host' => ['ip' => '172.21.107.77'],
 ];
 

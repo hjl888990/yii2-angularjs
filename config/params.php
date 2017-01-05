@@ -5,6 +5,6 @@ return [
     'emailDoRedisListKey' => 'email_list_do',
     'emailReDoRedisListKey' => 'email_list_redo',
     'emailDoRedisDetailKey' => 'email_detail_do',
-    'swoole_http_service_host' => $env['swoole_http_service_host'],
+    'swoole_service_host' => $env['swoole_service_host'],
     'webSiteUrl' => $env['webSiteUrl'],
 ];
