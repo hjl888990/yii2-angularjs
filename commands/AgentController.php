@@ -10,9 +10,8 @@ namespace app\commands;
 
 use Yii;
 use yii\console\Controller;
-use app\services\RedisService;
 use app\models\User;
-use yii\db\Connection;
+use yii\log\Logger;
 
 /**
  * 代理服务
@@ -36,13 +35,25 @@ class AgentController extends Controller {
 
         $server = new \swoole_http_server($socketAddress, $socketPort);
         $server->set(array(
+            //启用CPU亲和性设置
+            // 'open_cpu_affinity' => true,
+            //指定Reactor线程数
+            // 'reactor_num' => 8,
             'worker_num' => 4, //工作进程数量
-            'task_worker_num' => 8,//异步任务进程数量
-            //daemonize是否作为守护进程,此配置一般配合log_file使用
-            'daemonize' => false,
             //max_request处理这么多请求之后,重启worker进程，防止内存泄露。只能用在同步阻塞模式下，如果是纯异步的程序设置了可能会出问题,0不重启。
             'max_request' => 0,
+            //ipc_mode : 1 | 2 | 3，默认为1就是普通的unix socket通信方式，2和3就是使用消息队列模式（性能有点影响）。
+            //模式2和模式3的不同之处是，模式2支持定向投递，$serv->task($data, $task_worker_id) 这里可以指定投递到哪个task进程。
+            //模式3是完全争抢模式，task进程会争抢队列，将无法使用定向投递，即使指定了$task_worker_id，在模式3下也是无效的。
+            'ipc_mode' => 3,
             'dispatch_mode' => 3, //抢占模式，主进程会根据Worker的忙闲状态选择投递，只会投递给处于闲置状态的Worker
+            'task_worker_num' => 30,//异步任务进程数量
+            'task_ipc_mode' => 3,
+            'task_max_request' => 200,
+            //指定一个消息队列key。如果需要运行多个swoole_server的实例，务必指定。否则会发生数据错乱
+            'message_queue_key' => 0x72000100,
+            //daemonize是否作为守护进程,此配置一般配合log_file使用
+            'daemonize' => false,
             'debug_mode' => 1,
             'log_file' => '/data/yii2-angularjs/runtime/logs/swoole.log',
             //每隔heartbeat_check_interval秒后遍历一次全部连接，检查最近一次发送数据的时间和当前时间的差
@@ -76,7 +87,7 @@ class AgentController extends Controller {
             //返回任务执行的结果
             $data = json_encode($data,true);
             $resultMsg = "$data ==> $result";
-            $server->finish($resultMsg);
+            return $resultMsg;
         });
 
         //处理异步任务的结果
@@ -181,7 +192,7 @@ class AgentController extends Controller {
         }
         return $result;
     }
-
+                
     protected function addUser($user) {
         $userModel = new User();
         $result = $userModel->createUser($user);
@@ -215,6 +226,11 @@ class AgentController extends Controller {
             $redis = Yii::$app->getRedis();
             $redis->close();
         }
+        
+        //写入日志
+        $logger = Yii::$app->getLog();
+        $log = $logger->getLogger();
+        $log->flush(1);
 
     }
 

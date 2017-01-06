@@ -51,28 +51,14 @@ $config = [
             'showScriptName' => false,
             //'suffix' => 'path',
         ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => '172.21.107.71',
-            'port' => 7000,
-            'database' => 0,
-           // 'dataTimeout' => 1,
-        ],
-        'session' => [
-            'class' => 'yii\redis\Session',
-            'redis' => [
-                'hostname' => '172.21.107.71',
-                'port' => 7000,
-                'database' => 0,
-            ],
-            //'sessionName'=>'nihao'
-        ],
+        'redis' => $params['redis'],
+        'session' =>  $params['session'],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error'],
+                    'levels' => ['error','info'],
                     'categories'=>['shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/shell.log',
@@ -87,6 +73,7 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['info'],
+                    'except'=>['yii\db*','shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/access.log',
                 ]

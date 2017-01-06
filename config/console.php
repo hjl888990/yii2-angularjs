@@ -34,26 +34,18 @@ $config = [
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['info','error'],
-                    'categories'=>['swoole_service'],
-                    'logVars' => ['_GET', '_POST', '_FILES'],
-                    'logFile' => '@app/runtime/logs/swoole_service.log',
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
-                    'except'=>['shell_*','email','swoole_service'],
+                    'except'=>['shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/error.log',
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['info'],
-                    'except'=>['shell_*','email','swoole_service'],
+                    'except'=>['yii\db*','shell_*'],
                     'logVars' => ['_GET', '_POST', '_FILES'],
                     'logFile' => '@app/runtime/logs/access.log',
                 ]
-                
             ],
         ],
         //发邮件
@@ -73,23 +65,11 @@ $config = [
                 'from' => ['13627009379@163.com' => 'admin']
             ],
         ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => '172.21.107.71',
-            'port' => 7000,
-            'database' => 0,
-           // 'dataTimeout' => 1,
-        ],
+        'redis' => $params['redis'],
+        'session' =>  $params['session'],
         'db' => $db,
     ],
-    'params' => $params,
-    
-    'controllerMap' => [
-        'worker'=>[
-            'class' => 'app\commands\WorkerController',
-        ]
- 
-    ],
+    'params' => $params
     
 ];
 

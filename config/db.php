@@ -8,11 +8,11 @@ return [
     'password' => '123456',
     'charset' => 'utf8',
    // 'tablePrefix' => 'tbl_',//表前缀
-    'enableSchemaCache' => true,
+   // 'enableSchemaCache' => true,
     // Duration of schema cache.
-    'schemaCacheDuration' => 3600,
+  //  'schemaCacheDuration' => 3600,
     // Name of the cache component used to store schema information
-    'schemaCache' => 'cache',
+  //  'schemaCache' => 'cache',
     'attributes' => [
         // use a smaller connection timeout
         PDO::ATTR_TIMEOUT => 10,
